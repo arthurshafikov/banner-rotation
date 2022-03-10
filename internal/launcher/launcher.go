@@ -1,0 +1,4 @@
+package launcher
+
+func Launch() {
+}
