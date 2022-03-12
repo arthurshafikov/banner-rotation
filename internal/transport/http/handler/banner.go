@@ -2,9 +2,11 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/fasthttp/router"
+	"github.com/thewolf27/banner-rotation/internal/core"
 	"github.com/valyala/fasthttp"
 )
 
@@ -43,7 +45,10 @@ func (h *Handler) GetBanner(ctx *fasthttp.RequestCtx) {
 	id := h.parseIdFromRequest(ctx)
 	banner, err := h.services.Banners.GetBanner(h.ctx, int64(id))
 	if err != nil {
-		// todo sqlx check if empty rows result 404
+		if errors.Is(core.ErrNotFound, err) {
+			ctx.Error(err.Error(), 404)
+			return
+		}
 		ctx.Error(err.Error(), 500)
 		return
 	}

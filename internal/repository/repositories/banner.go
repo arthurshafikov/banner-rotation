@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
@@ -43,6 +45,9 @@ func (b *Banners) GetBanner(ctx context.Context, id int64) (*core.Banner, error)
 
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id=$1", b.table)
 	if err := b.db.GetContext(ctx, &banner, query, id); err != nil {
+		if errors.Is(sql.ErrNoRows, err) {
+			return nil, core.ErrNotFound
+		}
 		return nil, err
 	}
 
