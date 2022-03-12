@@ -28,6 +28,7 @@ func NewHandler(ctx context.Context, services *services.Services) *Handler {
 
 func (h *Handler) Init(r *router.Router) {
 	h.initBannerRoutes(r)
+	h.initSlotRoutes(r)
 }
 
 func (h *Handler) setJSONResponse(ctx *fasthttp.RequestCtx) {

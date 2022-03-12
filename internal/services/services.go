@@ -13,11 +13,18 @@ type Banners interface {
 	GetBanner(ctx context.Context, id int64) (*core.Banner, error)
 }
 
+type Slots interface {
+	AddSlot(ctx context.Context, description string) error
+	DeleteSlot(ctx context.Context, id int64) error
+	GetSlot(ctx context.Context, id int64) (*core.Slot, error)
+}
+
 type BannerSlotSocialGroups interface {
 }
 
 type Services struct {
 	Banners                Banners
+	Slots                  Slots
 	BannerSlotSocialGroups BannerSlotSocialGroups
 }
 
@@ -28,6 +35,7 @@ type Dependencies struct {
 func NewServices(deps Dependencies) *Services {
 	return &Services{
 		Banners:                NewBannerService(deps.Repository.Banners),
+		Slots:                  NewSlotService(deps.Repository.Slots),
 		BannerSlotSocialGroups: NewBannerSlotSocialGroupService(deps.Repository.BannerSlotSocialGroups),
 	}
 }
