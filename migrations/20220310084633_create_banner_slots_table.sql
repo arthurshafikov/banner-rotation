@@ -6,10 +6,12 @@ CREATE TABLE banner_slots (
     slot_id BIGSERIAL,
     CONSTRAINT banner_slots_banner_id_foreign_key
         FOREIGN KEY(banner_id) 
-        REFERENCES banners(id),
+        REFERENCES banners(id)
+        ON DELETE CASCADE,
     CONSTRAINT banner_slots_slot_id_foreign_key
         FOREIGN KEY(slot_id) 
         REFERENCES slots(id)
+        ON DELETE CASCADE
 );
 -- +goose StatementEnd
 
