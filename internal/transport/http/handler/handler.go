@@ -29,6 +29,7 @@ func NewHandler(ctx context.Context, services *services.Services) *Handler {
 func (h *Handler) Init(r *router.Router) {
 	h.initBannerRoutes(r)
 	h.initSlotRoutes(r)
+	h.initBannerSlotRoutes(r)
 }
 
 func (h *Handler) setJSONResponse(ctx *fasthttp.RequestCtx) {
@@ -36,16 +37,19 @@ func (h *Handler) setJSONResponse(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) parseIdFromRequest(ctx *fasthttp.RequestCtx) int64 {
-	idInterface := ctx.UserValue("id")
-	idString, ok := idInterface.(string)
+	return h.parseInt64(ctx.UserValue("id"))
+}
+
+func (h *Handler) parseInt64(num interface{}) int64 {
+	numString, ok := num.(string)
 	if !ok {
 		panic("not ok wtf")
 	}
 
-	id, err := strconv.Atoi(idString)
+	numInt, err := strconv.Atoi(numString)
 	if err != nil {
 		panic(err)
 	}
 
-	return int64(id)
+	return int64(numInt)
 }

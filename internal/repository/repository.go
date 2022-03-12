@@ -20,12 +20,18 @@ type Slots interface {
 	GetSlot(ctx context.Context, id int64) (*core.Slot, error)
 }
 
+type BannerSlots interface {
+	AddBannerSlot(ctx context.Context, bannerId, slotId int64) error
+	DeleteBannerSlot(ctx context.Context, bannerId, slotId int64) error
+}
+
 type BannerSlotSocialGroups interface {
 }
 
 type Repository struct {
 	Banners
 	Slots
+	BannerSlots
 	BannerSlotSocialGroups
 }
 
@@ -33,6 +39,7 @@ func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Banners:                repositories.NewBanners(db),
 		Slots:                  repositories.NewSlots(db),
+		BannerSlots:            repositories.NewBannerSlots(db),
 		BannerSlotSocialGroups: repositories.NewBannerSlotSocialGroups(db),
 	}
 }

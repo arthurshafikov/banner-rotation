@@ -19,13 +19,19 @@ type Slots interface {
 	GetSlot(ctx context.Context, id int64) (*core.Slot, error)
 }
 
+type BannerSlots interface {
+	AssociateBannerToSlot(ctx context.Context, bannerId, slotId int64) error
+	DissociateBannerFromSlot(ctx context.Context, bannerId, slotId int64) error
+}
+
 type BannerSlotSocialGroups interface {
 }
 
 type Services struct {
-	Banners                Banners
-	Slots                  Slots
-	BannerSlotSocialGroups BannerSlotSocialGroups
+	Banners
+	Slots
+	BannerSlots
+	BannerSlotSocialGroups
 }
 
 type Dependencies struct {
@@ -36,6 +42,7 @@ func NewServices(deps Dependencies) *Services {
 	return &Services{
 		Banners:                NewBannerService(deps.Repository.Banners),
 		Slots:                  NewSlotService(deps.Repository.Slots),
+		BannerSlots:            NewBannerSlotService(deps.Repository.BannerSlots),
 		BannerSlotSocialGroups: NewBannerSlotSocialGroupService(deps.Repository.BannerSlotSocialGroups),
 	}
 }
