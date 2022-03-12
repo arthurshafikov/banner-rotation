@@ -1,8 +1,16 @@
 package services
 
-import "github.com/thewolf27/banner-rotation/internal/repository"
+import (
+	"context"
+
+	"github.com/thewolf27/banner-rotation/internal/core"
+	"github.com/thewolf27/banner-rotation/internal/repository"
+)
 
 type Banners interface {
+	AddBanner(ctx context.Context, description string) error
+	DeleteBanner(ctx context.Context, id int64) error
+	GetBanner(ctx context.Context, id int64) (*core.Banner, error)
 }
 
 type BannerSlotSocialGroups interface {

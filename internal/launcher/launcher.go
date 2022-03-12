@@ -20,7 +20,7 @@ func Launch() {
 		Repository: repos,
 	})
 
-	s := http.NewServer(services)
+	s := http.NewServer(ctx, services)
 
 	s.Serve()
 }

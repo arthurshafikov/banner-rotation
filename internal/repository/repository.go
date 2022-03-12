@@ -1,11 +1,17 @@
 package repository
 
 import (
+	"context"
+
 	"github.com/jmoiron/sqlx"
+	"github.com/thewolf27/banner-rotation/internal/core"
 	"github.com/thewolf27/banner-rotation/internal/repository/repositories"
 )
 
 type Banners interface {
+	AddBanner(ctx context.Context, description string) error
+	DeleteBanner(ctx context.Context, id int64) error
+	GetBanner(ctx context.Context, id int64) (*core.Banner, error)
 }
 
 type BannerSlotSocialGroups interface {
