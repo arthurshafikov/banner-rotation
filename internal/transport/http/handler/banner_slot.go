@@ -16,7 +16,12 @@ func (h *Handler) initBannerSlotRoutes(r *router.Router) {
 }
 
 func (h *Handler) associateBannerToSlot(ctx *fasthttp.RequestCtx) {
-	bannerId, slotId := h.parseBannerAndSlotIdsFromRequest(ctx)
+	bannerId, slotId, err := h.parseBannerAndSlotIdsFromRequest(ctx)
+	if err != nil {
+		ctx.Error(err.Error(), 500)
+		return
+	}
+
 	if err := h.services.BannerSlots.AssociateBannerToSlot(h.ctx, bannerId, slotId); err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -26,7 +31,12 @@ func (h *Handler) associateBannerToSlot(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) dissociateBannerFromSlot(ctx *fasthttp.RequestCtx) {
-	bannerId, slotId := h.parseBannerAndSlotIdsFromRequest(ctx)
+	bannerId, slotId, err := h.parseBannerAndSlotIdsFromRequest(ctx)
+	if err != nil {
+		ctx.Error(err.Error(), 500)
+		return
+	}
+
 	if err := h.services.BannerSlots.DissociateBannerFromSlot(h.ctx, bannerId, slotId); err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -36,6 +46,16 @@ func (h *Handler) dissociateBannerFromSlot(ctx *fasthttp.RequestCtx) {
 
 }
 
-func (h *Handler) parseBannerAndSlotIdsFromRequest(ctx *fasthttp.RequestCtx) (int64, int64) {
-	return h.parseInt64(ctx.UserValue("bannerId")), h.parseInt64(ctx.UserValue("slotId"))
+func (h *Handler) parseBannerAndSlotIdsFromRequest(ctx *fasthttp.RequestCtx) (int64, int64, error) {
+	bannerId, err := h.parseInt64(ctx.UserValue("bannerId"))
+	if err != nil {
+		return 0, 0, err
+	}
+
+	slotId, err := h.parseInt64(ctx.UserValue("slotId"))
+	if err != nil {
+		return 0, 0, err
+	}
+
+	return bannerId, slotId, nil
 }

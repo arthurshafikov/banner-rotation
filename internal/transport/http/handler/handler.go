@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 	"strconv"
 
 	"github.com/fasthttp/router"
@@ -36,20 +37,20 @@ func (h *Handler) setJSONResponse(ctx *fasthttp.RequestCtx) {
 	ctx.Response.Header.SetCanonical(strContentType, strApplicationJSON)
 }
 
-func (h *Handler) parseIdFromRequest(ctx *fasthttp.RequestCtx) int64 {
+func (h *Handler) parseIdFromRequest(ctx *fasthttp.RequestCtx) (int64, error) {
 	return h.parseInt64(ctx.UserValue("id"))
 }
 
-func (h *Handler) parseInt64(num interface{}) int64 {
-	numString, ok := num.(string)
+func (h *Handler) parseInt64(value interface{}) (int64, error) {
+	valueString, ok := value.(string)
 	if !ok {
-		panic("not ok wtf")
+		return 0, errors.New("could not convert value to string")
 	}
 
-	numInt, err := strconv.Atoi(numString)
+	valueInt, err := strconv.Atoi(valueString)
 	if err != nil {
-		panic(err)
+		return 0, err
 	}
 
-	return int64(numInt)
+	return int64(valueInt), nil
 }

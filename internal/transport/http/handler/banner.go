@@ -32,7 +32,11 @@ func (h *Handler) AddBanner(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) DeleteBanner(ctx *fasthttp.RequestCtx) {
-	id := h.parseIdFromRequest(ctx)
+	id, err := h.parseIdFromRequest(ctx)
+	if err != nil {
+		ctx.Error(err.Error(), 500)
+		return
+	}
 	if err := h.services.Banners.DeleteBanner(h.ctx, int64(id)); err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -42,7 +46,11 @@ func (h *Handler) DeleteBanner(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) GetBanner(ctx *fasthttp.RequestCtx) {
-	id := h.parseIdFromRequest(ctx)
+	id, err := h.parseIdFromRequest(ctx)
+	if err != nil {
+		ctx.Error(err.Error(), 500)
+		return
+	}
 	banner, err := h.services.Banners.GetBanner(h.ctx, int64(id))
 	if err != nil {
 		if errors.Is(core.ErrNotFound, err) {
