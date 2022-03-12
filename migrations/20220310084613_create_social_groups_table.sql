@@ -2,7 +2,7 @@
 -- +goose StatementBegin
 CREATE TABLE social_groups (
     id BIGSERIAL PRIMARY KEY,
-    description VARCHAR(300) NULL,
+    description VARCHAR(300) NULL
 );
 -- +goose StatementEnd
 

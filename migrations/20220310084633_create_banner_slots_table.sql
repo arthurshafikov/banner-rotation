@@ -1,7 +1,7 @@
 -- +goose Up
 -- +goose StatementBegin
 CREATE TABLE banner_slots (
-    if BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     banner_id BIGSERIAL,
     slot_id BIGSERIAL,
     CONSTRAINT banner_slots_banner_id_foreign_key
