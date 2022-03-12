@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/fasthttp/router"
@@ -20,24 +21,9 @@ func NewServer(ctx context.Context, services *services.Services) *Server {
 	}
 }
 
-func (s *Server) Serve() {
+func (s *Server) Serve(port string) {
 	r := router.New()
 	s.handler.Init(r)
 
-	// m := func(ctx *fasthttp.RequestCtx) {
-	// 	switch string(ctx.Path()) {
-	// 	case "/banner/add":
-	// 		s.handler.AddBanner(ctx)
-	// 	case "/banner/delete":
-	// 		s.handler.DeleteBanner(ctx)
-	// 	case "/banner/get":
-	// 		s.handler.GetBanner(ctx)
-	// 	case "/increment":
-	// 		s.handler.IncrementClick(ctx)
-	// 	default:
-	// 		ctx.Error("not found", fasthttp.StatusNotFound)
-	// 	}
-	// }
-
-	log.Fatal(fasthttp.ListenAndServe(":8123", r.Handler))
+	log.Fatal(fasthttp.ListenAndServe(fmt.Sprintf(":%s", port), r.Handler))
 }

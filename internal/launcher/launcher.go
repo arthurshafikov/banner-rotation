@@ -2,17 +2,31 @@ package launcher
 
 import (
 	"context"
+	"flag"
 
+	"github.com/thewolf27/banner-rotation/internal/config"
 	"github.com/thewolf27/banner-rotation/internal/repository"
 	"github.com/thewolf27/banner-rotation/internal/services"
 	"github.com/thewolf27/banner-rotation/internal/transport/http"
 	"github.com/thewolf27/banner-rotation/pkg/postgres"
 )
 
-func Launch() {
-	ctx := context.TODO()
+var (
+	envFileLocation string
+)
 
-	db := postgres.NewSqlxDb(ctx, "host=localhost user=homestead password=secret dbname=homestead sslmode=disable")
+func init() {
+	flag.StringVar(&envFileLocation, "env", "./.env", "Path to .env file")
+}
+
+func Launch() {
+	flag.Parse()
+
+	ctx := context.Background()
+
+	config := config.NewConfig(envFileLocation)
+
+	db := postgres.NewSqlxDb(ctx, config.DSN)
 
 	repos := repository.NewRepository(db)
 
@@ -22,5 +36,5 @@ func Launch() {
 
 	s := http.NewServer(ctx, services)
 
-	s.Serve()
+	s.Serve(config.Port)
 }
