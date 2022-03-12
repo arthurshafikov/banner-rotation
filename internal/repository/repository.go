@@ -25,6 +25,12 @@ type BannerSlots interface {
 	DeleteBannerSlot(ctx context.Context, bannerId, slotId int64) error
 }
 
+type SocialGroups interface {
+	AddSocialGroup(ctx context.Context, description string) error
+	DeleteSocialGroup(ctx context.Context, id int64) error
+	GetSocialGroup(ctx context.Context, id int64) (*core.SocialGroup, error)
+}
+
 type BannerSlotSocialGroups interface {
 }
 
@@ -32,6 +38,7 @@ type Repository struct {
 	Banners
 	Slots
 	BannerSlots
+	SocialGroups
 	BannerSlotSocialGroups
 }
 
@@ -40,6 +47,7 @@ func NewRepository(db *sqlx.DB) *Repository {
 		Banners:                repositories.NewBanners(db),
 		Slots:                  repositories.NewSlots(db),
 		BannerSlots:            repositories.NewBannerSlots(db),
+		SocialGroups:           repositories.NewSocialGroups(db),
 		BannerSlotSocialGroups: repositories.NewBannerSlotSocialGroups(db),
 	}
 }

@@ -24,6 +24,12 @@ type BannerSlots interface {
 	DissociateBannerFromSlot(ctx context.Context, bannerId, slotId int64) error
 }
 
+type SocialGroups interface {
+	AddSocialGroup(ctx context.Context, description string) error
+	DeleteSocialGroup(ctx context.Context, id int64) error
+	GetSocialGroup(ctx context.Context, id int64) (*core.SocialGroup, error)
+}
+
 type BannerSlotSocialGroups interface {
 }
 
@@ -31,6 +37,7 @@ type Services struct {
 	Banners
 	Slots
 	BannerSlots
+	SocialGroups
 	BannerSlotSocialGroups
 }
 
@@ -43,6 +50,7 @@ func NewServices(deps Dependencies) *Services {
 		Banners:                NewBannerService(deps.Repository.Banners),
 		Slots:                  NewSlotService(deps.Repository.Slots),
 		BannerSlots:            NewBannerSlotService(deps.Repository.BannerSlots),
+		SocialGroups:           NewSocialGroupService(deps.Repository.SocialGroups),
 		BannerSlotSocialGroups: NewBannerSlotSocialGroupService(deps.Repository.BannerSlotSocialGroups),
 	}
 }

@@ -31,6 +31,7 @@ func (h *Handler) Init(r *router.Router) {
 	h.initBannerRoutes(r)
 	h.initSlotRoutes(r)
 	h.initBannerSlotRoutes(r)
+	h.initSocialGroupRoutes(r)
 }
 
 func (h *Handler) setJSONResponse(ctx *fasthttp.RequestCtx) {
