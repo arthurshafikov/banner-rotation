@@ -11,7 +11,8 @@ CREATE TABLE banner_slots (
     CONSTRAINT banner_slots_slot_id_foreign_key
         FOREIGN KEY(slot_id) 
         REFERENCES slots(id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    UNIQUE (banner_id, slot_id)
 );
 -- +goose StatementEnd
 

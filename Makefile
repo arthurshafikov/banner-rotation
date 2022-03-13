@@ -24,3 +24,7 @@ migrate:
 
 rollback:
 	goose -dir migrations postgres "host=localhost user=homestead password=secret dbname=homestead sslmode=disable" down
+
+fresh:
+	goose -dir migrations postgres "host=localhost user=homestead password=secret dbname=homestead sslmode=disable" reset
+	make migrate
