@@ -101,29 +101,6 @@ func (bss *BannerSlotSocialGroups) GetTheMostProfitableBannerId(
 	return result.Banner_id, nil
 }
 
-func (bss *BannerSlotSocialGroups) GetRandomExceptExcludedBannerId(
-	ctx context.Context,
-	slotId,
-	excludedBannerId int64,
-) (int64, error) {
-	var result = struct {
-		Banner_id int64 `db:"banner_id"`
-	}{}
-	// https://www.gab.lc/articles/bigdata_postgresql_order_by_random/
-	query := fmt.Sprintf(
-		`SELECT %[1]s.banner_id FROM %[1]s
-			WHERE %[1]s.slot_id = $1 AND %[1]s.banner_id != $2
-			ORDER BY RANDOM()
-			LIMIT 1;`,
-		core.BannerSlotTable,
-	)
-	if err := bss.db.GetContext(ctx, &result, query, slotId, excludedBannerId); err != nil {
-		return 0, err
-	}
-
-	return result.Banner_id, nil
-}
-
 func (bss *BannerSlotSocialGroups) scanFirst(
 	ctx context.Context,
 	bannerSlotSocialGroup *core.BannerSlotSocialGroup,

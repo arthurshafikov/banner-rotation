@@ -25,6 +25,14 @@ func (bs *BannerSlotService) DissociateBannerFromSlot(ctx context.Context, banne
 	return bs.repo.DeleteBannerSlot(ctx, bannerId, slotId)
 }
 
-func (bs *BannerSlotService) GetByServiceAndBannerIds(ctx context.Context, bannerId, slotId int64) (*core.BannerSlot, error) {
-	return bs.repo.GetByServiceAndBannerIds(ctx, bannerId, slotId)
+func (bs *BannerSlotService) GetByBannerAndSlotIds(ctx context.Context, bannerId, slotId int64) (*core.BannerSlot, error) {
+	return bs.repo.GetByBannerAndSlotIds(ctx, bannerId, slotId)
+}
+
+func (bs *BannerSlotService) GetRandomBannerIdExceptExcluded(
+	ctx context.Context,
+	slotId,
+	excludedBannerId int64,
+) (int64, error) {
+	return bs.repo.GetRandomBannerIdExceptExcluded(ctx, slotId, excludedBannerId)
 }

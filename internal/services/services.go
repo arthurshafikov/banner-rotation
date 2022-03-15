@@ -22,6 +22,8 @@ type Slots interface {
 type BannerSlots interface {
 	AssociateBannerToSlot(ctx context.Context, bannerId, slotId int64) error
 	DissociateBannerFromSlot(ctx context.Context, bannerId, slotId int64) error
+	GetByBannerAndSlotIds(ctx context.Context, bannerId, slotId int64) (*core.BannerSlot, error)
+	GetRandomBannerIdExceptExcluded(ctx context.Context, slotId, excludedBannerId int64) (int64, error)
 }
 
 type SocialGroups interface {

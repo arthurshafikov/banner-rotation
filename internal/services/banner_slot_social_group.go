@@ -12,7 +12,7 @@ type BannerSlotSocialGroupService struct {
 	repo        repository.BannerSlotSocialGroups
 	eGreedValue float64
 
-	bannerSlotService *BannerSlotService
+	bannerSlotService BannerSlots
 }
 
 func NewBannerSlotSocialGroupService(
@@ -28,7 +28,7 @@ func NewBannerSlotSocialGroupService(
 }
 
 func (bss *BannerSlotSocialGroupService) IncrementClick(ctx context.Context, inp core.IncrementClickInput) error {
-	bannerSlot, err := bss.bannerSlotService.GetByServiceAndBannerIds(ctx, inp.BannerId, inp.SlotId)
+	bannerSlot, err := bss.bannerSlotService.GetByBannerAndSlotIds(ctx, inp.BannerId, inp.SlotId)
 	if err != nil {
 		return err
 	}
@@ -43,13 +43,13 @@ func (bss *BannerSlotSocialGroupService) GetBanner(ctx context.Context, inp core
 	}
 
 	if bss.rollADice(bss.eGreedValue) {
-		bannerId, err = bss.repo.GetRandomExceptExcludedBannerId(ctx, inp.SlotId, bannerId)
+		bannerId, err = bss.bannerSlotService.GetRandomBannerIdExceptExcluded(ctx, inp.SlotId, bannerId)
 		if err != nil {
 			return 0, err
 		}
 	}
 
-	bannerSlot, err := bss.bannerSlotService.GetByServiceAndBannerIds(ctx, bannerId, inp.SlotId)
+	bannerSlot, err := bss.bannerSlotService.GetByBannerAndSlotIds(ctx, bannerId, inp.SlotId)
 	if err != nil {
 		return 0, err
 	}
