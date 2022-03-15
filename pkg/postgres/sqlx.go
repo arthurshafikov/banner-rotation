@@ -11,7 +11,9 @@ func NewSqlxDb(ctx context.Context, dsn string) *sqlx.DB {
 	db, err := sqlx.Connect("postgres", dsn)
 	go func() {
 		<-ctx.Done()
-		closeConnection(db)
+		if err := closeConnection(db); err != nil {
+			panic(err)
+		}
 	}()
 	if err != nil {
 		panic(err)
