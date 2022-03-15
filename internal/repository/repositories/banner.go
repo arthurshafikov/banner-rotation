@@ -18,7 +18,7 @@ type Banners struct {
 func NewBanners(db *sqlx.DB) *Banners {
 	return &Banners{
 		db:    db,
-		table: "banners",
+		table: core.BannersTable,
 	}
 }
 

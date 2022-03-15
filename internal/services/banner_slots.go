@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 
+	"github.com/thewolf27/banner-rotation/internal/core"
 	"github.com/thewolf27/banner-rotation/internal/repository"
 )
 
@@ -22,4 +23,8 @@ func (bs *BannerSlotService) AssociateBannerToSlot(ctx context.Context, bannerId
 
 func (bs *BannerSlotService) DissociateBannerFromSlot(ctx context.Context, bannerId, slotId int64) error {
 	return bs.repo.DeleteBannerSlot(ctx, bannerId, slotId)
+}
+
+func (bs *BannerSlotService) GetByServiceAndBannerIds(ctx context.Context, bannerId, slotId int64) (*core.BannerSlot, error) {
+	return bs.repo.GetByServiceAndBannerIds(ctx, bannerId, slotId)
 }

@@ -32,6 +32,7 @@ func (h *Handler) Init(r *router.Router) {
 	h.initSlotRoutes(r)
 	h.initBannerSlotRoutes(r)
 	h.initSocialGroupRoutes(r)
+	h.initBannerSlotSocialGroupRoutes(r)
 }
 
 func (h *Handler) setJSONResponse(ctx *fasthttp.RequestCtx) {
@@ -39,14 +40,25 @@ func (h *Handler) setJSONResponse(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) parseIdFromRequest(ctx *fasthttp.RequestCtx) (int64, error) {
-	return h.parseInt64(ctx.UserValue("id"))
+	return h.parseInt64FromInterface(ctx.UserValue("id"))
 }
 
-func (h *Handler) parseInt64(value interface{}) (int64, error) {
+func (h *Handler) parseInt64FromInterface(value interface{}) (int64, error) {
 	valueString, ok := value.(string)
 	if !ok {
 		return 0, errors.New("could not convert value to string")
 	}
+
+	valueInt, err := strconv.Atoi(valueString)
+	if err != nil {
+		return 0, err
+	}
+
+	return int64(valueInt), nil
+}
+
+func (h *Handler) parseInt64FromBytes(value []byte) (int64, error) {
+	valueString := string(value)
 
 	valueInt, err := strconv.Atoi(valueString)
 	if err != nil {

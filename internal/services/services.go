@@ -31,6 +31,8 @@ type SocialGroups interface {
 }
 
 type BannerSlotSocialGroups interface {
+	IncrementClick(ctx context.Context, inp core.IncrementClickInput) error
+	GetBanner(ctx context.Context, inp core.GetBannerRequest) (int64, error)
 }
 
 type Services struct {
@@ -46,11 +48,20 @@ type Dependencies struct {
 }
 
 func NewServices(deps Dependencies) *Services {
+	bannerService := NewBannerService(deps.Repository.Banners)
+	slotService := NewSlotService(deps.Repository.Slots)
+	bannerSlotService := NewBannerSlotService(deps.Repository.BannerSlots)
+	socialGroupService := NewSocialGroupService(deps.Repository.SocialGroups)
+	bannerSlotSocialGroupService := NewBannerSlotSocialGroupService(
+		deps.Repository.BannerSlotSocialGroups,
+		bannerSlotService,
+	)
+
 	return &Services{
-		Banners:                NewBannerService(deps.Repository.Banners),
-		Slots:                  NewSlotService(deps.Repository.Slots),
-		BannerSlots:            NewBannerSlotService(deps.Repository.BannerSlots),
-		SocialGroups:           NewSocialGroupService(deps.Repository.SocialGroups),
-		BannerSlotSocialGroups: NewBannerSlotSocialGroupService(deps.Repository.BannerSlotSocialGroups),
+		Banners:                bannerService,
+		Slots:                  slotService,
+		BannerSlots:            bannerSlotService,
+		SocialGroups:           socialGroupService,
+		BannerSlotSocialGroups: bannerSlotSocialGroupService,
 	}
 }

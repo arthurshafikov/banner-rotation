@@ -2,9 +2,12 @@ package repositories
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/thewolf27/banner-rotation/internal/core"
 )
 
 type BannerSlots struct {
@@ -15,7 +18,7 @@ type BannerSlots struct {
 func NewBannerSlots(db *sqlx.DB) *BannerSlots {
 	return &BannerSlots{
 		db:    db,
-		table: "banner_slots",
+		table: core.BannerSlotTable,
 	}
 }
 
@@ -35,4 +38,18 @@ func (bs *BannerSlots) DeleteBannerSlot(ctx context.Context, bannerId, slotId in
 	}
 
 	return nil
+}
+
+func (bs *BannerSlots) GetByServiceAndBannerIds(ctx context.Context, bannerId, slotId int64) (*core.BannerSlot, error) {
+	bannerSlot := core.BannerSlot{}
+
+	query := fmt.Sprintf("SELECT * FROM %s WHERE banner_id=$1 AND slot_id=$2", bs.table)
+	if err := bs.db.GetContext(ctx, &bannerSlot, query, bannerId, slotId); err != nil {
+		if errors.Is(sql.ErrNoRows, err) {
+			return nil, core.ErrNotFound
+		}
+		return nil, err
+	}
+
+	return &bannerSlot, nil
 }

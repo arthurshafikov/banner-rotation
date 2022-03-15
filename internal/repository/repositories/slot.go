@@ -18,7 +18,7 @@ type Slots struct {
 func NewSlots(db *sqlx.DB) *Slots {
 	return &Slots{
 		db:    db,
-		table: "slots",
+		table: core.SlotsTable,
 	}
 }
 

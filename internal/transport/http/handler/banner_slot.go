@@ -47,12 +47,12 @@ func (h *Handler) dissociateBannerFromSlot(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) parseBannerAndSlotIdsFromRequest(ctx *fasthttp.RequestCtx) (int64, int64, error) {
-	bannerId, err := h.parseInt64(ctx.UserValue("bannerId"))
+	bannerId, err := h.parseInt64FromInterface(ctx.UserValue("bannerId"))
 	if err != nil {
 		return 0, 0, err
 	}
 
-	slotId, err := h.parseInt64(ctx.UserValue("slotId"))
+	slotId, err := h.parseInt64FromInterface(ctx.UserValue("slotId"))
 	if err != nil {
 		return 0, 0, err
 	}

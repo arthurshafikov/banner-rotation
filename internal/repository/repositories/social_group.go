@@ -18,7 +18,7 @@ type SocialGroups struct {
 func NewSocialGroups(db *sqlx.DB) *SocialGroups {
 	return &SocialGroups{
 		db:    db,
-		table: "social_groups",
+		table: core.SocialGroupTable,
 	}
 }
 
