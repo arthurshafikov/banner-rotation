@@ -31,7 +31,8 @@ func Launch() {
 	repos := repository.NewRepository(db)
 
 	services := services.NewServices(services.Dependencies{
-		Repository: repos,
+		Repository:  repos,
+		EGreedValue: config.MultihandedBanditConfig.EGreedValue,
 	})
 
 	s := http.NewServer(ctx, services)

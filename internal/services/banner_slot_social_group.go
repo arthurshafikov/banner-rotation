@@ -9,7 +9,8 @@ import (
 )
 
 type BannerSlotSocialGroupService struct {
-	repo repository.BannerSlotSocialGroups
+	repo        repository.BannerSlotSocialGroups
+	eGreedValue float64
 
 	bannerSlotService *BannerSlotService
 }
@@ -17,9 +18,11 @@ type BannerSlotSocialGroupService struct {
 func NewBannerSlotSocialGroupService(
 	repo repository.BannerSlotSocialGroups,
 	bannerSlotService *BannerSlotService,
+	eGreedValue float64,
 ) *BannerSlotSocialGroupService {
 	return &BannerSlotSocialGroupService{
 		repo:              repo,
+		eGreedValue:       eGreedValue,
 		bannerSlotService: bannerSlotService,
 	}
 }
@@ -39,8 +42,7 @@ func (bss *BannerSlotSocialGroupService) GetBanner(ctx context.Context, inp core
 		return 0, err
 	}
 
-	// todo config E-greed value
-	if bss.rollADice(0.1) {
+	if bss.rollADice(bss.eGreedValue) {
 		bannerId, err = bss.repo.GetRandomExceptExcludedBannerId(ctx, inp.SlotId, bannerId)
 		if err != nil {
 			return 0, err

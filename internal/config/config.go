@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
@@ -9,6 +10,7 @@ import (
 type Config struct {
 	DatabaseConfig
 	ServerConfig
+	MultihandedBanditConfig
 }
 
 type DatabaseConfig struct {
@@ -19,8 +21,17 @@ type ServerConfig struct {
 	Port string
 }
 
+type MultihandedBanditConfig struct {
+	EGreedValue float64
+}
+
 func NewConfig(envFileLocation string) *Config {
 	err := godotenv.Load(envFileLocation)
+	if err != nil {
+		panic(err)
+	}
+
+	eGreedValue, err := strconv.ParseFloat(os.Getenv("E_GREED_VALUE"), 64)
 	if err != nil {
 		panic(err)
 	}
@@ -31,6 +42,9 @@ func NewConfig(envFileLocation string) *Config {
 		},
 		ServerConfig: ServerConfig{
 			Port: os.Getenv("APP_PORT"),
+		},
+		MultihandedBanditConfig: MultihandedBanditConfig{
+			EGreedValue: eGreedValue,
 		},
 	}
 }

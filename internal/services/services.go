@@ -44,7 +44,8 @@ type Services struct {
 }
 
 type Dependencies struct {
-	Repository *repository.Repository
+	Repository  *repository.Repository
+	EGreedValue float64
 }
 
 func NewServices(deps Dependencies) *Services {
@@ -55,6 +56,7 @@ func NewServices(deps Dependencies) *Services {
 	bannerSlotSocialGroupService := NewBannerSlotSocialGroupService(
 		deps.Repository.BannerSlotSocialGroups,
 		bannerSlotService,
+		deps.EGreedValue,
 	)
 
 	return &Services{
