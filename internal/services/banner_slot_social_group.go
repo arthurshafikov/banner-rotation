@@ -45,7 +45,7 @@ func (bssg *BannerSlotSocialGroupService) GetBannerIdToShow(
 		return 0, err
 	}
 
-	if bssg.rollADice(bssg.eGreedValue) {
+	if bannerId == 0 || bssg.rollADice(bssg.eGreedValue) {
 		bannerId, err = bssg.bannerSlotService.GetRandomBannerIdExceptExcluded(ctx, inp.SlotId, bannerId)
 		if err != nil {
 			return 0, err
