@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/thewolf27/banner-rotation/internal/launcher"
+	"github.com/thewolf27/banner-rotation/internal/app"
 )
 
 func main() {
-	launcher.Launch()
+	app.Run()
 }
