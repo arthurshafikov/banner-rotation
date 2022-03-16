@@ -28,3 +28,7 @@ rollback:
 fresh:
 	goose -dir migrations postgres "host=localhost user=homestead password=secret dbname=homestead sslmode=disable" reset
 	make migrate
+
+mocks:
+	mockgen -source=./internal/repository/repository.go -destination ./internal/repository/mocks/mock.go
+	mockgen -source=./internal/services/services.go -destination ./internal/services/mocks/mock.go
