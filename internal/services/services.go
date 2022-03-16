@@ -34,7 +34,7 @@ type SocialGroups interface {
 
 type BannerSlotSocialGroups interface {
 	IncrementClick(ctx context.Context, inp core.IncrementClickInput) error
-	GetBanner(ctx context.Context, inp core.GetBannerRequest) (int64, error)
+	GetBannerIdToShow(ctx context.Context, inp core.GetBannerRequest) (int64, error)
 }
 
 type Services struct {
