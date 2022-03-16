@@ -18,6 +18,7 @@ require (
 )
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/klauspost/compress v1.15.0 // indirect

@@ -24,8 +24,10 @@ func NewSocialGroups(db *sqlx.DB) *SocialGroups {
 
 func (b *SocialGroups) AddSocialGroup(ctx context.Context, description string) error {
 	query := fmt.Sprintf("INSERT INTO %s (description) VALUES ($1)", b.table)
-	if err := b.db.QueryRowContext(ctx, query, description).Err(); err != nil {
-		return err
+	if err := b.db.QueryRowContext(ctx, query, description).Scan(); err != nil {
+		if !errors.Is(sql.ErrNoRows, err) {
+			return err
+		}
 	}
 
 	return nil
@@ -33,8 +35,10 @@ func (b *SocialGroups) AddSocialGroup(ctx context.Context, description string) e
 
 func (b *SocialGroups) DeleteSocialGroup(ctx context.Context, id int64) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE id=$1", b.table)
-	if err := b.db.QueryRowContext(ctx, query, id).Err(); err != nil {
-		return err
+	if err := b.db.QueryRowContext(ctx, query, id).Scan(); err != nil {
+		if !errors.Is(sql.ErrNoRows, err) {
+			return err
+		}
 	}
 
 	return nil
