@@ -1,4 +1,4 @@
-package launcher
+package app
 
 import (
 	"context"
@@ -19,7 +19,7 @@ func init() {
 	flag.StringVar(&envFileLocation, "env", "./.env", "Path to .env file")
 }
 
-func Launch() {
+func Run() {
 	flag.Parse()
 
 	ctx := context.Background()
