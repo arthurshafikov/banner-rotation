@@ -15,7 +15,7 @@ func (h *Handler) initBannerSlotSocialGroupRoutes(r *router.Router) {
 	bannerSlotSocialGroup := r.Group("/")
 	{
 		bannerSlotSocialGroup.POST("increment", h.incrementClick)
-		bannerSlotSocialGroup.GET("getBanner", h.getBanner)
+		bannerSlotSocialGroup.GET("getBanner", h.getBannerIdToShow)
 	}
 }
 
@@ -53,7 +53,7 @@ func (h *Handler) incrementClick(ctx *fasthttp.RequestCtx) {
 	ctx.SetStatusCode(http.StatusOK)
 }
 
-func (h *Handler) getBanner(ctx *fasthttp.RequestCtx) {
+func (h *Handler) getBannerIdToShow(ctx *fasthttp.RequestCtx) {
 	slotId, err := h.parseInt64FromBytes(ctx.QueryArgs().Peek("slot_id"))
 	if err != nil {
 		ctx.Error(err.Error(), 500)
@@ -65,7 +65,7 @@ func (h *Handler) getBanner(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	bannerId, err := h.services.BannerSlotSocialGroups.GetBanner(h.ctx, core.GetBannerRequest{
+	bannerId, err := h.services.BannerSlotSocialGroups.GetBannerIdToShow(h.ctx, core.GetBannerRequest{
 		SlotId:        slotId,
 		SocialGroupId: socialGroupId,
 	})
