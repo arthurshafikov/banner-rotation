@@ -24,8 +24,10 @@ func NewBannerSlots(db *sqlx.DB) *BannerSlots {
 
 func (bs *BannerSlots) AddBannerSlot(ctx context.Context, bannerId, slotId int64) error {
 	query := fmt.Sprintf("INSERT INTO %s (banner_id, slot_id) VALUES ($1, $2)", bs.table)
-	if err := bs.db.QueryRowContext(ctx, query, bannerId, slotId).Err(); err != nil {
-		return err
+	if err := bs.db.QueryRowContext(ctx, query, bannerId, slotId).Scan(); err != nil {
+		if !errors.Is(sql.ErrNoRows, err) {
+			return err
+		}
 	}
 
 	return nil
@@ -33,8 +35,10 @@ func (bs *BannerSlots) AddBannerSlot(ctx context.Context, bannerId, slotId int64
 
 func (bs *BannerSlots) DeleteBannerSlot(ctx context.Context, bannerId, slotId int64) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE banner_id=$1 AND slot_id=$2", bs.table)
-	if err := bs.db.QueryRowContext(ctx, query, bannerId, slotId).Err(); err != nil {
-		return err
+	if err := bs.db.QueryRowContext(ctx, query, bannerId, slotId).Scan(); err != nil {
+		if !errors.Is(sql.ErrNoRows, err) {
+			return err
+		}
 	}
 
 	return nil
@@ -63,8 +67,8 @@ func (bs *BannerSlots) GetRandomBannerIdExceptExcluded(
 		Banner_id int64 `db:"banner_id"`
 	}{}
 	query := fmt.Sprintf(
-		`SELECT %[1]s.banner_id FROM %[1]s
-			WHERE %[1]s.slot_id = $1 AND %[1]s.banner_id != $2
+		`SELECT banner_id FROM %s
+			WHERE slot_id = $1 AND banner_id != $2
 			ORDER BY RANDOM()
 			LIMIT 1;`,
 		bs.table,
