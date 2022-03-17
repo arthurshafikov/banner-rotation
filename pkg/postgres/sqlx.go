@@ -23,7 +23,5 @@ func NewSqlxDb(ctx context.Context, dsn string) *sqlx.DB {
 }
 
 func closeConnection(db *sqlx.DB) error {
-	err := db.Close()
-
-	return err
+	return db.Close()
 }
