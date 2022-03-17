@@ -49,10 +49,7 @@ func TestIncrementClick(t *testing.T) {
 	req.SetRequestURI("http://localhost")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.incrementClick, req, resp); err != nil {
-		t.Error(err)
-	}
-
+	require.NoError(t, serve(handler.incrementClick, req, resp))
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }
 
@@ -75,14 +72,10 @@ func TestGetBannerIdToShow(t *testing.T) {
 	req.SetRequestURI("http://localhost")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.getBannerIdToShow, req, resp); err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, serve(handler.getBannerIdToShow, req, resp))
 
 	expectedJson, err := json.Marshal(core.GetBannerResponse{ID: banner.ID})
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err)
 	require.Equal(t, expectedJson, resp.Body())
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }

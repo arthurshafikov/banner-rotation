@@ -19,10 +19,7 @@ func TestAddSocialGroup(t *testing.T) {
 
 	err := socialGroupRepo.AddSocialGroup(ctx, "test_description")
 	require.NoError(t, err)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestDeleteSocialGroup(t *testing.T) {
@@ -36,10 +33,7 @@ func TestDeleteSocialGroup(t *testing.T) {
 
 	err := socialGroupRepo.DeleteSocialGroup(ctx, 25)
 	require.NoError(t, err)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestGetSocialGroup(t *testing.T) {
@@ -58,8 +52,5 @@ func TestGetSocialGroup(t *testing.T) {
 	result, err := socialGroupRepo.GetSocialGroup(ctx, 25)
 	require.NoError(t, err)
 	require.Equal(t, &expected, result)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
