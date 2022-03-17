@@ -32,7 +32,7 @@ func (h *Handler) addSlot(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) deleteSlot(ctx *fasthttp.RequestCtx) {
-	id, err := h.requestParser.ParseIdFromRequest(ctx)
+	id, err := h.getIdFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -46,7 +46,7 @@ func (h *Handler) deleteSlot(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) getSlot(ctx *fasthttp.RequestCtx) {
-	id, err := h.requestParser.ParseIdFromRequest(ctx)
+	id, err := h.getIdFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return

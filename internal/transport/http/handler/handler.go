@@ -14,9 +14,8 @@ var (
 )
 
 type RequestParser interface {
-	ParseIdFromRequest(*fasthttp.RequestCtx) (int64, error)
-	ParseInt64FromRequest(*fasthttp.RequestCtx, string) (int64, error)
-	ParseInt64FromQueryArgs(*fasthttp.RequestCtx, string) (int64, error)
+	ParseInt64FromInterface(interface{}) (int64, error)
+	ParseInt64FromBytes([]byte) (int64, error)
 }
 
 type Handler struct {
@@ -47,4 +46,16 @@ func (h *Handler) Init(r *router.Router) {
 
 func (h *Handler) setJSONResponse(ctx *fasthttp.RequestCtx) {
 	ctx.Response.Header.SetCanonical(strContentType, strApplicationJSON)
+}
+
+func (h *Handler) getIdFromRequest(ctx *fasthttp.RequestCtx) (int64, error) {
+	return h.getInt64UserValueFromRequest(ctx, "id")
+}
+
+func (h *Handler) getInt64UserValueFromRequest(ctx *fasthttp.RequestCtx, key string) (int64, error) {
+	return h.requestParser.ParseInt64FromInterface(ctx.UserValue(key))
+}
+
+func (h *Handler) getInt64ParamFromRequest(ctx *fasthttp.RequestCtx, key string) (int64, error) {
+	return h.requestParser.ParseInt64FromBytes(ctx.QueryArgs().Peek(key))
 }
