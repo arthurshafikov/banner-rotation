@@ -13,16 +13,16 @@ import (
 func (h *Handler) initSlotRoutes(r *router.Router) {
 	slots := r.Group("/slot")
 	{
-		slots.POST("/add", h.AddSlot)
+		slots.POST("/add", h.addSlot)
 		slotsId := slots.Group("/{id}")
 		{
-			slotsId.GET("", h.GetSlot)
-			slotsId.DELETE("/remove", h.DeleteSlot)
+			slotsId.GET("", h.getSlot)
+			slotsId.DELETE("/remove", h.deleteSlot)
 		}
 	}
 }
 
-func (h *Handler) AddSlot(ctx *fasthttp.RequestCtx) {
+func (h *Handler) addSlot(ctx *fasthttp.RequestCtx) {
 	if err := h.services.Slots.AddSlot(h.ctx, string(ctx.QueryArgs().Peek("description"))); err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -31,13 +31,13 @@ func (h *Handler) AddSlot(ctx *fasthttp.RequestCtx) {
 	ctx.SetStatusCode(http.StatusCreated)
 }
 
-func (h *Handler) DeleteSlot(ctx *fasthttp.RequestCtx) {
-	id, err := h.parseIdFromRequest(ctx)
+func (h *Handler) deleteSlot(ctx *fasthttp.RequestCtx) {
+	id, err := h.requestParser.ParseIdFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	if err := h.services.Slots.DeleteSlot(h.ctx, int64(id)); err != nil {
+	if err := h.services.Slots.DeleteSlot(h.ctx, id); err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
@@ -45,13 +45,13 @@ func (h *Handler) DeleteSlot(ctx *fasthttp.RequestCtx) {
 	ctx.SetStatusCode(http.StatusOK)
 }
 
-func (h *Handler) GetSlot(ctx *fasthttp.RequestCtx) {
-	id, err := h.parseIdFromRequest(ctx)
+func (h *Handler) getSlot(ctx *fasthttp.RequestCtx) {
+	id, err := h.requestParser.ParseIdFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	slot, err := h.services.Slots.GetSlot(h.ctx, int64(id))
+	slot, err := h.services.Slots.GetSlot(h.ctx, id)
 	if err != nil {
 		if errors.Is(core.ErrNotFound, err) {
 			ctx.Error(err.Error(), 404)

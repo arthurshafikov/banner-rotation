@@ -13,16 +13,16 @@ import (
 func (h *Handler) initSocialGroupRoutes(r *router.Router) {
 	socialGroups := r.Group("/socialGroup")
 	{
-		socialGroups.POST("/add", h.AddSocialGroup)
+		socialGroups.POST("/add", h.addSocialGroup)
 		socialGroupsId := socialGroups.Group("/{id}")
 		{
-			socialGroupsId.GET("", h.GetSocialGroup)
-			socialGroupsId.DELETE("/remove", h.DeleteSocialGroup)
+			socialGroupsId.GET("", h.getSocialGroup)
+			socialGroupsId.DELETE("/remove", h.deleteSocialGroup)
 		}
 	}
 }
 
-func (h *Handler) AddSocialGroup(ctx *fasthttp.RequestCtx) {
+func (h *Handler) addSocialGroup(ctx *fasthttp.RequestCtx) {
 	if err := h.services.SocialGroups.AddSocialGroup(h.ctx, string(ctx.QueryArgs().Peek("description"))); err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -31,13 +31,13 @@ func (h *Handler) AddSocialGroup(ctx *fasthttp.RequestCtx) {
 	ctx.SetStatusCode(http.StatusCreated)
 }
 
-func (h *Handler) DeleteSocialGroup(ctx *fasthttp.RequestCtx) {
-	id, err := h.parseIdFromRequest(ctx)
+func (h *Handler) deleteSocialGroup(ctx *fasthttp.RequestCtx) {
+	id, err := h.requestParser.ParseIdFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	if err := h.services.SocialGroups.DeleteSocialGroup(h.ctx, int64(id)); err != nil {
+	if err := h.services.SocialGroups.DeleteSocialGroup(h.ctx, id); err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
@@ -45,13 +45,13 @@ func (h *Handler) DeleteSocialGroup(ctx *fasthttp.RequestCtx) {
 	ctx.SetStatusCode(http.StatusOK)
 }
 
-func (h *Handler) GetSocialGroup(ctx *fasthttp.RequestCtx) {
-	id, err := h.parseIdFromRequest(ctx)
+func (h *Handler) getSocialGroup(ctx *fasthttp.RequestCtx) {
+	id, err := h.requestParser.ParseIdFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	socialGroup, err := h.services.SocialGroups.GetSocialGroup(h.ctx, int64(id))
+	socialGroup, err := h.services.SocialGroups.GetSocialGroup(h.ctx, id)
 	if err != nil {
 		if errors.Is(core.ErrNotFound, err) {
 			ctx.Error(err.Error(), 404)

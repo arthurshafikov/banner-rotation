@@ -2,8 +2,6 @@ package handler
 
 import (
 	"context"
-	"errors"
-	"strconv"
 
 	"github.com/fasthttp/router"
 	"github.com/thewolf27/banner-rotation/internal/services"
@@ -15,15 +13,27 @@ var (
 	strApplicationJSON = []byte("application/json")
 )
 
-type Handler struct {
-	ctx      context.Context
-	services *services.Services
+type RequestParser interface {
+	ParseIdFromRequest(*fasthttp.RequestCtx) (int64, error)
+	ParseInt64FromRequest(*fasthttp.RequestCtx, string) (int64, error)
+	ParseInt64FromQueryArgs(*fasthttp.RequestCtx, string) (int64, error)
 }
 
-func NewHandler(ctx context.Context, services *services.Services) *Handler {
+type Handler struct {
+	ctx           context.Context
+	services      *services.Services
+	requestParser RequestParser
+}
+
+func NewHandler(
+	ctx context.Context,
+	services *services.Services,
+	requestParser RequestParser,
+) *Handler {
 	return &Handler{
-		ctx:      ctx,
-		services: services,
+		ctx:           ctx,
+		services:      services,
+		requestParser: requestParser,
 	}
 }
 
@@ -37,33 +47,4 @@ func (h *Handler) Init(r *router.Router) {
 
 func (h *Handler) setJSONResponse(ctx *fasthttp.RequestCtx) {
 	ctx.Response.Header.SetCanonical(strContentType, strApplicationJSON)
-}
-
-func (h *Handler) parseIdFromRequest(ctx *fasthttp.RequestCtx) (int64, error) {
-	return h.parseInt64FromInterface(ctx.UserValue("id"))
-}
-
-func (h *Handler) parseInt64FromInterface(value interface{}) (int64, error) {
-	valueString, ok := value.(string)
-	if !ok {
-		return 0, errors.New("could not convert value to string")
-	}
-
-	valueInt, err := strconv.Atoi(valueString)
-	if err != nil {
-		return 0, err
-	}
-
-	return int64(valueInt), nil
-}
-
-func (h *Handler) parseInt64FromBytes(value []byte) (int64, error) {
-	valueString := string(value)
-
-	valueInt, err := strconv.Atoi(valueString)
-	if err != nil {
-		return 0, err
-	}
-
-	return int64(valueInt), nil
 }

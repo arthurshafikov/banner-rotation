@@ -13,16 +13,16 @@ import (
 func (h *Handler) initBannerRoutes(r *router.Router) {
 	banners := r.Group("/banner")
 	{
-		banners.POST("/add", h.AddBanner)
+		banners.POST("/add", h.addBanner)
 		bannersId := banners.Group("/{id}")
 		{
-			bannersId.GET("", h.GetBanner)
-			bannersId.DELETE("/remove", h.DeleteBanner)
+			bannersId.GET("", h.getBanner)
+			bannersId.DELETE("/remove", h.deleteBanner)
 		}
 	}
 }
 
-func (h *Handler) AddBanner(ctx *fasthttp.RequestCtx) {
+func (h *Handler) addBanner(ctx *fasthttp.RequestCtx) {
 	if err := h.services.Banners.AddBanner(h.ctx, string(ctx.QueryArgs().Peek("description"))); err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -31,13 +31,13 @@ func (h *Handler) AddBanner(ctx *fasthttp.RequestCtx) {
 	ctx.SetStatusCode(http.StatusCreated)
 }
 
-func (h *Handler) DeleteBanner(ctx *fasthttp.RequestCtx) {
-	id, err := h.parseIdFromRequest(ctx)
+func (h *Handler) deleteBanner(ctx *fasthttp.RequestCtx) {
+	id, err := h.requestParser.ParseIdFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	if err := h.services.Banners.DeleteBanner(h.ctx, int64(id)); err != nil {
+	if err := h.services.Banners.DeleteBanner(h.ctx, id); err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
@@ -45,8 +45,8 @@ func (h *Handler) DeleteBanner(ctx *fasthttp.RequestCtx) {
 	ctx.SetStatusCode(http.StatusOK)
 }
 
-func (h *Handler) GetBanner(ctx *fasthttp.RequestCtx) {
-	id, err := h.parseIdFromRequest(ctx)
+func (h *Handler) getBanner(ctx *fasthttp.RequestCtx) {
+	id, err := h.requestParser.ParseIdFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return

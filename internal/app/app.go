@@ -8,6 +8,7 @@ import (
 	"github.com/thewolf27/banner-rotation/internal/repository"
 	"github.com/thewolf27/banner-rotation/internal/services"
 	"github.com/thewolf27/banner-rotation/internal/transport/http"
+	"github.com/thewolf27/banner-rotation/internal/transport/http/handler"
 	"github.com/thewolf27/banner-rotation/pkg/postgres"
 )
 
@@ -35,7 +36,7 @@ func Run() {
 		EGreedValue: config.MultihandedBanditConfig.EGreedValue,
 	})
 
-	s := http.NewServer(ctx, services)
-
+	handler := handler.NewHandler(ctx, services, http.NewRequestParser())
+	s := http.NewServer(ctx, handler)
 	s.Serve(config.Port)
 }

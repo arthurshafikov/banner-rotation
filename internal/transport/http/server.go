@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/fasthttp/router"
-	"github.com/thewolf27/banner-rotation/internal/services"
 	"github.com/thewolf27/banner-rotation/internal/transport/http/handler"
 	"github.com/valyala/fasthttp"
 )
@@ -15,9 +14,9 @@ type Server struct {
 	handler *handler.Handler
 }
 
-func NewServer(ctx context.Context, services *services.Services) *Server {
+func NewServer(ctx context.Context, handler *handler.Handler) *Server {
 	return &Server{
-		handler: handler.NewHandler(ctx, services),
+		handler: handler,
 	}
 }
 

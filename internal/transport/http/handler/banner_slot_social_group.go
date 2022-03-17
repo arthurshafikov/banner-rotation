@@ -20,17 +20,17 @@ func (h *Handler) initBannerSlotSocialGroupRoutes(r *router.Router) {
 }
 
 func (h *Handler) incrementClick(ctx *fasthttp.RequestCtx) {
-	slotId, err := h.parseInt64FromBytes(ctx.QueryArgs().Peek("slot_id"))
+	slotId, err := h.requestParser.ParseInt64FromQueryArgs(ctx, "slot_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	bannerId, err := h.parseInt64FromBytes(ctx.QueryArgs().Peek("banner_id"))
+	bannerId, err := h.requestParser.ParseInt64FromQueryArgs(ctx, "banner_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	socialGroupId, err := h.parseInt64FromBytes(ctx.QueryArgs().Peek("social_group_id"))
+	socialGroupId, err := h.requestParser.ParseInt64FromQueryArgs(ctx, "social_group_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -54,12 +54,12 @@ func (h *Handler) incrementClick(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) getBannerIdToShow(ctx *fasthttp.RequestCtx) {
-	slotId, err := h.parseInt64FromBytes(ctx.QueryArgs().Peek("slot_id"))
+	slotId, err := h.requestParser.ParseInt64FromQueryArgs(ctx, "slot_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	socialGroupId, err := h.parseInt64FromBytes(ctx.QueryArgs().Peek("social_group_id"))
+	socialGroupId, err := h.requestParser.ParseInt64FromQueryArgs(ctx, "social_group_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
