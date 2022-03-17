@@ -14,7 +14,7 @@ func (h *Handler) initSocialGroupRoutes(r *router.Router) {
 	socialGroups := r.Group("/socialGroup")
 	{
 		socialGroups.POST("/add", h.addSocialGroup)
-		socialGroupsId := socialGroups.Group("/{id}")
+		socialGroupsId := socialGroups.Group("/{id:[0-9]+}")
 		{
 			socialGroupsId.GET("", h.getSocialGroup)
 			socialGroupsId.DELETE("/remove", h.deleteSocialGroup)
