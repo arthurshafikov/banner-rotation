@@ -17,7 +17,7 @@ func (h *Handler) initBannerRoutes(r *router.Router) {
 		bannersId := banners.Group("/{id:[0-9]+}")
 		{
 			bannersId.GET("", h.getBanner)
-			bannersId.DELETE("/remove", h.deleteBanner)
+			bannersId.DELETE("/delete", h.deleteBanner)
 		}
 	}
 }
