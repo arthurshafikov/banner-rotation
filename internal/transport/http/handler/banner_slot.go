@@ -8,10 +8,10 @@ import (
 )
 
 func (h *Handler) initBannerSlotRoutes(r *router.Router) {
-	bannerSlot := r.Group("/banner/{bannerId}")
+	bannerSlot := r.Group("/banner/{bannerId:[0-9]+}")
 	{
-		bannerSlot.POST("/slot/{slotId}", h.associateBannerToSlot)
-		bannerSlot.DELETE("/slot/{slotId}", h.dissociateBannerFromSlot)
+		bannerSlot.POST("/slot/{slotId:[0-9]+}", h.associateBannerToSlot)
+		bannerSlot.DELETE("/slot/{slotId:[0-9]+}", h.dissociateBannerFromSlot)
 	}
 }
 

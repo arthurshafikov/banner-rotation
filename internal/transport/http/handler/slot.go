@@ -14,7 +14,7 @@ func (h *Handler) initSlotRoutes(r *router.Router) {
 	slots := r.Group("/slot")
 	{
 		slots.POST("/add", h.addSlot)
-		slotsId := slots.Group("/{id}")
+		slotsId := slots.Group("/{id:[0-9]+}")
 		{
 			slotsId.GET("", h.getSlot)
 			slotsId.DELETE("/remove", h.deleteSlot)
