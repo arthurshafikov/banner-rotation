@@ -20,3 +20,7 @@ type GetBannerRequest struct {
 	SlotId        int64
 	SocialGroupId int64
 }
+
+type GetBannerResponse struct {
+	ID int64 `json:"id"`
+}

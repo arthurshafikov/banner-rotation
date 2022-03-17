@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/fasthttp/router"
@@ -20,17 +19,17 @@ func (h *Handler) initBannerSlotSocialGroupRoutes(r *router.Router) {
 }
 
 func (h *Handler) incrementClick(ctx *fasthttp.RequestCtx) {
-	slotId, err := h.requestParser.ParseInt64FromQueryArgs(ctx, "slot_id")
+	bannerId, err := h.getInt64ParamFromRequest(ctx, "banner_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	bannerId, err := h.requestParser.ParseInt64FromQueryArgs(ctx, "banner_id")
+	slotId, err := h.getInt64ParamFromRequest(ctx, "slot_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	socialGroupId, err := h.requestParser.ParseInt64FromQueryArgs(ctx, "social_group_id")
+	socialGroupId, err := h.getInt64ParamFromRequest(ctx, "social_group_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -54,12 +53,12 @@ func (h *Handler) incrementClick(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) getBannerIdToShow(ctx *fasthttp.RequestCtx) {
-	slotId, err := h.requestParser.ParseInt64FromQueryArgs(ctx, "slot_id")
+	slotId, err := h.getInt64ParamFromRequest(ctx, "slot_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	socialGroupId, err := h.requestParser.ParseInt64FromQueryArgs(ctx, "social_group_id")
+	socialGroupId, err := h.getInt64ParamFromRequest(ctx, "social_group_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -79,7 +78,7 @@ func (h *Handler) getBannerIdToShow(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	bannerIdJSON, err := json.Marshal(struct{ ID string }{ID: fmt.Sprintf("%v", bannerId)})
+	bannerIdJSON, err := json.Marshal(core.GetBannerResponse{ID: bannerId})
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return

@@ -3,8 +3,6 @@ package http
 import (
 	"errors"
 	"strconv"
-
-	"github.com/valyala/fasthttp"
 )
 
 type RequestParser struct{}
@@ -13,12 +11,8 @@ func NewRequestParser() *RequestParser {
 	return &RequestParser{}
 }
 
-func (rp *RequestParser) ParseIdFromRequest(ctx *fasthttp.RequestCtx) (int64, error) {
-	return rp.ParseInt64FromRequest(ctx, "id")
-}
-
-func (rp *RequestParser) ParseInt64FromRequest(ctx *fasthttp.RequestCtx, key string) (int64, error) {
-	valueString, ok := ctx.UserValue(key).(string)
+func (rp *RequestParser) ParseInt64FromInterface(value interface{}) (int64, error) {
+	valueString, ok := value.(string)
 	if !ok {
 		return 0, errors.New("could not convert value to string")
 	}
@@ -31,8 +25,8 @@ func (rp *RequestParser) ParseInt64FromRequest(ctx *fasthttp.RequestCtx, key str
 	return int64(valueInt), nil
 }
 
-func (rp *RequestParser) ParseInt64FromQueryArgs(ctx *fasthttp.RequestCtx, key string) (int64, error) {
-	valueString := string(ctx.QueryArgs().Peek(key))
+func (rp *RequestParser) ParseInt64FromBytes(bytes []byte) (int64, error) {
+	valueString := string(bytes)
 
 	valueInt, err := strconv.Atoi(valueString)
 	if err != nil {
