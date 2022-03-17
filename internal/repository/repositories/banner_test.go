@@ -30,10 +30,7 @@ func TestAddBanner(t *testing.T) {
 
 	err := bannerRepo.AddBanner(ctx, "test_description")
 	require.NoError(t, err)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestDeleteBanner(t *testing.T) {
@@ -47,10 +44,7 @@ func TestDeleteBanner(t *testing.T) {
 
 	err := bannerRepo.DeleteBanner(ctx, 25)
 	require.NoError(t, err)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestGetBanner(t *testing.T) {
@@ -69,8 +63,5 @@ func TestGetBanner(t *testing.T) {
 	result, err := bannerRepo.GetBanner(ctx, 25)
 	require.NoError(t, err)
 	require.Equal(t, &expected, result)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }

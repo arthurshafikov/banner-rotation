@@ -30,10 +30,7 @@ func TestIncrementClick(t *testing.T) {
 
 	err := bannerSlotSocialGroupRepo.IncrementClick(ctx, expected.BannerSlotId, expected.SocialGroupId)
 	require.NoError(t, err)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestIncrementView(t *testing.T) {
@@ -56,10 +53,7 @@ func TestIncrementView(t *testing.T) {
 
 	err := bannerSlotSocialGroupRepo.IncrementView(ctx, expected.BannerSlotId, expected.SocialGroupId)
 	require.NoError(t, err)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestGetTheMostProfitableBannerId(t *testing.T) {
@@ -89,10 +83,7 @@ func TestGetTheMostProfitableBannerId(t *testing.T) {
 	bannerId, err := bannerSlotSocialGroupRepo.GetTheMostProfitableBannerId(ctx, expected.SlotId, socialGroupId)
 	require.NoError(t, err)
 	require.Equal(t, expected.BannerId, bannerId)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestFirstOrCreateNotExists(t *testing.T) {
@@ -118,8 +109,5 @@ func TestFirstOrCreateNotExists(t *testing.T) {
 	result, err := bannerSlotSocialGroupRepo.firstOrCreate(ctx, expected.BannerSlotId, expected.SocialGroupId)
 	require.NoError(t, err)
 	require.Equal(t, &expected, result)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }

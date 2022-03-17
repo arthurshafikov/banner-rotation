@@ -19,10 +19,7 @@ func TestAddBannerSlot(t *testing.T) {
 
 	err := bannerSlotRepo.AddBannerSlot(ctx, 1, 2)
 	require.NoError(t, err)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestDeleteBannerSlot(t *testing.T) {
@@ -36,10 +33,7 @@ func TestDeleteBannerSlot(t *testing.T) {
 
 	err := bannerSlotRepo.DeleteBannerSlot(ctx, 1, 2)
 	require.NoError(t, err)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestGetByBannerAndSlotIds(t *testing.T) {
@@ -59,10 +53,7 @@ func TestGetByBannerAndSlotIds(t *testing.T) {
 	result, err := bannerSlotRepo.GetByBannerAndSlotIds(ctx, 1, 2)
 	require.NoError(t, err)
 	require.Equal(t, &expected, result)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestGetRandomBannerIdExceptExcluded(t *testing.T) {
@@ -88,8 +79,5 @@ func TestGetRandomBannerIdExceptExcluded(t *testing.T) {
 	result, err := bannerSlotRepo.GetRandomBannerIdExceptExcluded(ctx, expected.SlotId, excludedBannerSlot.BannerId)
 	require.NoError(t, err)
 	require.Equal(t, expected.BannerId, result)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }

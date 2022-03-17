@@ -43,10 +43,7 @@ func TestAssociateBannerToSlot(t *testing.T) {
 	req.SetRequestURI("http://localhost")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.associateBannerToSlot, req, resp); err != nil {
-		t.Error(err)
-	}
-
+	require.NoError(t, serve(handler.associateBannerToSlot, req, resp))
 	require.Equal(t, http.StatusCreated, resp.StatusCode())
 }
 
@@ -65,9 +62,6 @@ func TestDissociateBannerFromSlot(t *testing.T) {
 	req.SetRequestURI("http://localhost")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.dissociateBannerFromSlot, req, resp); err != nil {
-		t.Error(err)
-	}
-
+	require.NoError(t, serve(handler.dissociateBannerFromSlot, req, resp))
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }

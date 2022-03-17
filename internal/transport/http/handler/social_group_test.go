@@ -39,10 +39,7 @@ func TestAddSocialGroup(t *testing.T) {
 	req.URI().QueryArgs().Add("description", "value")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.addSocialGroup, req, resp); err != nil {
-		t.Error(err)
-	}
-
+	require.NoError(t, serve(handler.addSocialGroup, req, resp))
 	require.Equal(t, http.StatusCreated, resp.StatusCode())
 }
 
@@ -57,10 +54,7 @@ func TestDeleteSocialGroup(t *testing.T) {
 	req.SetRequestURI("http://localhost")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.deleteSocialGroup, req, resp); err != nil {
-		t.Error(err)
-	}
-
+	require.NoError(t, serve(handler.deleteSocialGroup, req, resp))
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }
 
@@ -77,14 +71,10 @@ func TestGetSocialGroup(t *testing.T) {
 	req.SetRequestURI("http://localhost")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.getSocialGroup, req, resp); err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, serve(handler.getSocialGroup, req, resp))
 
 	expectedSocialGroupJson, err := json.Marshal(socialGroup)
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err)
 	require.Equal(t, expectedSocialGroupJson, resp.Body())
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }

@@ -19,10 +19,7 @@ func TestAddSlot(t *testing.T) {
 
 	err := slotRepo.AddSlot(ctx, "test_description")
 	require.NoError(t, err)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestDeleteSlot(t *testing.T) {
@@ -36,10 +33,7 @@ func TestDeleteSlot(t *testing.T) {
 
 	err := slotRepo.DeleteSlot(ctx, 25)
 	require.NoError(t, err)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestGetSlot(t *testing.T) {
@@ -58,8 +52,5 @@ func TestGetSlot(t *testing.T) {
 	result, err := slotRepo.GetSlot(ctx, 25)
 	require.NoError(t, err)
 	require.Equal(t, &expected, result)
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
+	require.NoError(t, mock.ExpectationsWereMet())
 }

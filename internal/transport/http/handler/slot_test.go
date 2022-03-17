@@ -39,10 +39,7 @@ func TestAddSlot(t *testing.T) {
 	req.URI().QueryArgs().Add("description", "value")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.addSlot, req, resp); err != nil {
-		t.Error(err)
-	}
-
+	require.NoError(t, serve(handler.addSlot, req, resp))
 	require.Equal(t, http.StatusCreated, resp.StatusCode())
 }
 
@@ -57,10 +54,7 @@ func TestDeleteSlot(t *testing.T) {
 	req.SetRequestURI("http://localhost")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.deleteSlot, req, resp); err != nil {
-		t.Error(err)
-	}
-
+	require.NoError(t, serve(handler.deleteSlot, req, resp))
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }
 
@@ -77,14 +71,10 @@ func TestGetSlot(t *testing.T) {
 	req.SetRequestURI("http://localhost")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.getSlot, req, resp); err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, serve(handler.getSlot, req, resp))
 
 	expectedSlotJson, err := json.Marshal(slot)
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err)
 	require.Equal(t, expectedSlotJson, resp.Body())
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }

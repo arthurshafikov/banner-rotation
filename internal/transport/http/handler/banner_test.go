@@ -41,10 +41,7 @@ func TestAddBanner(t *testing.T) {
 	req.URI().QueryArgs().Add("description", "value")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.addBanner, req, resp); err != nil {
-		t.Error(err)
-	}
-
+	require.NoError(t, serve(handler.addBanner, req, resp))
 	require.Equal(t, http.StatusCreated, resp.StatusCode())
 }
 
@@ -59,10 +56,7 @@ func TestDeleteBanner(t *testing.T) {
 	req.SetRequestURI("http://localhost")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.deleteBanner, req, resp); err != nil {
-		t.Error(err)
-	}
-
+	require.NoError(t, serve(handler.deleteBanner, req, resp))
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }
 
@@ -79,14 +73,9 @@ func TestGetBanner(t *testing.T) {
 	req.SetRequestURI("http://localhost")
 
 	resp := fasthttp.AcquireResponse()
-	if err := serve(handler.getBanner, req, resp); err != nil {
-		t.Error(err)
-	}
-
+	require.NoError(t, serve(handler.getBanner, req, resp))
 	expectedBannerJson, err := json.Marshal(banner)
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err)
 	require.Equal(t, expectedBannerJson, resp.Body())
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }
