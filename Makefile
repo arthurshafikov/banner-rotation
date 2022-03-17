@@ -32,3 +32,4 @@ fresh:
 mocks:
 	mockgen -source=./internal/repository/repository.go -destination ./internal/repository/mocks/mock.go
 	mockgen -source=./internal/services/services.go -destination ./internal/services/mocks/mock.go
+	mockgen -source=./internal/transport/http/handler/handler.go -destination ./internal/transport/http/handler/mocks/mock.go
