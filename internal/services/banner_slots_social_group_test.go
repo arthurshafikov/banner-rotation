@@ -31,12 +31,12 @@ func TestIncrementClick(t *testing.T) {
 	bannerSlotService := getBannerSlotServiceMock(t)
 	bannerSlot := core.BannerSlot{
 		ID:       23,
-		SlotId:   1,
 		BannerId: 3,
+		SlotId:   1,
 	}
 	input := core.IncrementClickInput{
-		SlotId:        bannerSlot.SlotId,
 		BannerId:      bannerSlot.BannerId,
+		SlotId:        bannerSlot.SlotId,
 		SocialGroupId: 6,
 	}
 
@@ -57,13 +57,13 @@ func TestGetBannerIdToShow(t *testing.T) {
 	slotId := int64(1)
 	mostProfitableBannerSlot := core.BannerSlot{
 		ID:       23,
-		SlotId:   slotId,
 		BannerId: 3,
+		SlotId:   slotId,
 	}
 	randomBannerSlot := core.BannerSlot{
 		ID:       44,
-		SlotId:   slotId,
 		BannerId: 5,
+		SlotId:   slotId,
 	}
 	input := core.GetBannerRequest{
 		SlotId:        slotId,
