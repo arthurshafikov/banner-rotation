@@ -36,8 +36,8 @@ func (h *Handler) incrementClick(ctx *fasthttp.RequestCtx) {
 	}
 
 	if err := h.services.BannerSlotSocialGroups.IncrementClick(h.ctx, core.IncrementClickInput{
-		SlotId:        slotId,
 		BannerId:      bannerId,
+		SlotId:        slotId,
 		SocialGroupId: socialGroupId,
 	}); err != nil {
 		if errors.Is(core.ErrNotFound, err) {

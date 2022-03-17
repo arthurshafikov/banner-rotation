@@ -11,8 +11,8 @@ type BannerSlotSocialGroup struct {
 }
 
 type IncrementClickInput struct {
-	SlotId        int64
 	BannerId      int64
+	SlotId        int64
 	SocialGroupId int64
 }
 
