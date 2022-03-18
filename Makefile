@@ -2,6 +2,7 @@ BIN := "./.bin/app"
 DOCKER_COMPOSE_FILE := "./deployments/docker-compose.yml"
 DOCKER_COMPOSE_TEST_FILE := "./deployments/docker-compose.tests.yml"
 APP_NAME := "banner_rotation"
+APP_TEST_NAME := "banner_rotation_test"
 
 GIT_HASH := $(shell git log --format="%h" -n 1)
 LDFLAGS := -X main.release="develop" -X main.buildDate=$(shell date -u +%Y-%m-%dT%H:%M:%S) -X main.gitHash=$(GIT_HASH)
@@ -30,3 +31,10 @@ mocks:
 	mockgen -source=./internal/repository/repository.go -destination ./internal/repository/mocks/mock.go
 	mockgen -source=./internal/services/services.go -destination ./internal/services/mocks/mock.go
 	mockgen -source=./internal/transport/http/handler/handler.go -destination ./internal/transport/http/handler/mocks/mock.go
+
+integration-tests:
+	docker-compose -f ${DOCKER_COMPOSE_TEST_FILE} -p ${APP_TEST_NAME} up --build --abort-on-container-exit --exit-code-from integration
+	docker-compose -f ${DOCKER_COMPOSE_TEST_FILE} -p ${APP_TEST_NAME} down --volumes
+
+reset-integration-tests:
+	docker-compose -f ${DOCKER_COMPOSE_TEST_FILE} -p ${APP_TEST_NAME} down --volumes
