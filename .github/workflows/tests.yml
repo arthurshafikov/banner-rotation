@@ -34,7 +34,7 @@ jobs:
         with:
           version: v1.40
 
-  tests:
+  unit:
     runs-on: ubuntu-latest
     steps:
       - name: Extract branch name
