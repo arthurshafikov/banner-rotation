@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/fasthttp/router"
 	"github.com/thewolf27/banner-rotation/internal/services"
@@ -44,7 +45,13 @@ func (h *Handler) Init(r *router.Router) {
 	h.initBannerSlotSocialGroupRoutes(r)
 }
 
-func (h *Handler) setJSONResponse(ctx *fasthttp.RequestCtx) {
+func (h *Handler) setJSONResponse(ctx *fasthttp.RequestCtx, body interface{}) {
+	bodyJSON, err := json.Marshal(body)
+	if err != nil {
+		ctx.Error(err.Error(), 500)
+		return
+	}
+	ctx.SetBody(bodyJSON)
 	ctx.Response.Header.SetCanonical(strContentType, strApplicationJSON)
 }
 

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -23,11 +22,15 @@ func (h *Handler) initSlotRoutes(r *router.Router) {
 }
 
 func (h *Handler) addSlot(ctx *fasthttp.RequestCtx) {
-	if err := h.services.Slots.AddSlot(h.ctx, string(ctx.QueryArgs().Peek("description"))); err != nil {
+	slot := core.Slot{}
+	var err error
+	slot.ID, err = h.services.Slots.AddSlot(h.ctx, string(ctx.QueryArgs().Peek("description")))
+	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
 
+	h.setJSONResponse(ctx, slot)
 	ctx.SetStatusCode(http.StatusCreated)
 }
 
@@ -61,12 +64,6 @@ func (h *Handler) getSlot(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	slotJSON, err := json.Marshal(slot)
-	if err != nil {
-		ctx.Error(err.Error(), 500)
-		return
-	}
 	ctx.SetStatusCode(http.StatusOK)
-	ctx.SetBody(slotJSON)
-	h.setJSONResponse(ctx)
+	h.setJSONResponse(ctx, slot)
 }

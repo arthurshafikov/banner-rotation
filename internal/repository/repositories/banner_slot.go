@@ -22,15 +22,12 @@ func NewBannerSlots(db *sqlx.DB) *BannerSlots {
 	}
 }
 
-func (bs *BannerSlots) AddBannerSlot(ctx context.Context, bannerId, slotId int64) error {
-	query := fmt.Sprintf("INSERT INTO %s (banner_id, slot_id) VALUES ($1, $2)", bs.table)
-	if err := bs.db.QueryRowContext(ctx, query, bannerId, slotId).Scan(); err != nil {
-		if !errors.Is(sql.ErrNoRows, err) {
-			return err
-		}
-	}
+func (bs *BannerSlots) AddBannerSlot(ctx context.Context, bannerId, slotId int64) (int64, error) {
+	var bannerSlotId int64
+	query := fmt.Sprintf("INSERT INTO %s (banner_id, slot_id) VALUES ($1, $2) RETURNING id;", bs.table)
+	err := bs.db.QueryRowxContext(ctx, query, bannerId, slotId).Scan(&bannerSlotId)
 
-	return nil
+	return bannerSlotId, err
 }
 
 func (bs *BannerSlots) DeleteBannerSlot(ctx context.Context, bannerId, slotId int64) error {

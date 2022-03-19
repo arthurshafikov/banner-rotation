@@ -24,13 +24,14 @@ func TestAddBanner(t *testing.T) {
 	defer mockDB.Close()
 	bannerRepo := NewBanners(sqlxDB)
 
-	mock.ExpectQuery("INSERT INTO banners \\(description\\) VALUES \\(\\$1\\)").
+	mock.ExpectQuery("INSERT INTO banners \\(description\\) VALUES \\(\\$1\\) RETURNING id;").
 		WithArgs("test_description").
-		WillReturnRows(sqlmock.NewRows([]string{}))
+		WillReturnRows(sqlmock.NewRows([]string{"id"}).FromCSVString("2"))
 
-	err := bannerRepo.AddBanner(ctx, "test_description")
+	bannerId, err := bannerRepo.AddBanner(ctx, "test_description")
 	require.NoError(t, err)
 	require.NoError(t, mock.ExpectationsWereMet())
+	require.Equal(t, int64(2), bannerId)
 }
 
 func TestDeleteBanner(t *testing.T) {

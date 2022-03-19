@@ -13,13 +13,14 @@ func TestAddSlot(t *testing.T) {
 	defer mockDB.Close()
 	slotRepo := NewSlots(sqlxDB)
 
-	mock.ExpectQuery("INSERT INTO slots \\(description\\) VALUES \\(\\$1\\)").
+	mock.ExpectQuery("INSERT INTO slots \\(description\\) VALUES \\(\\$1\\) RETURNING id;").
 		WithArgs("test_description").
-		WillReturnRows(sqlmock.NewRows([]string{}))
+		WillReturnRows(sqlmock.NewRows([]string{"id"}).FromCSVString("2"))
 
-	err := slotRepo.AddSlot(ctx, "test_description")
+	slotId, err := slotRepo.AddSlot(ctx, "test_description")
 	require.NoError(t, err)
 	require.NoError(t, mock.ExpectationsWereMet())
+	require.Equal(t, int64(2), slotId)
 }
 
 func TestDeleteSlot(t *testing.T) {

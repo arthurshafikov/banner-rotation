@@ -13,13 +13,14 @@ func TestAddBannerSlot(t *testing.T) {
 	defer mockDB.Close()
 	bannerSlotRepo := NewBannerSlots(sqlxDB)
 
-	mock.ExpectQuery("INSERT INTO banner_slots \\(banner_id, slot_id\\) VALUES \\(\\$1, \\$2\\)").
+	mock.ExpectQuery("INSERT INTO banner_slots \\(banner_id, slot_id\\) VALUES \\(\\$1, \\$2\\) RETURNING id;").
 		WithArgs(1, 2).
-		WillReturnRows(sqlmock.NewRows([]string{}))
+		WillReturnRows(sqlmock.NewRows([]string{"id"}).FromCSVString("2"))
 
-	err := bannerSlotRepo.AddBannerSlot(ctx, 1, 2)
+	bannerSlotId, err := bannerSlotRepo.AddBannerSlot(ctx, 1, 2)
 	require.NoError(t, err)
 	require.NoError(t, mock.ExpectationsWereMet())
+	require.Equal(t, int64(2), bannerSlotId)
 }
 
 func TestDeleteBannerSlot(t *testing.T) {

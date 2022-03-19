@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/fasthttp/router"
+	"github.com/thewolf27/banner-rotation/internal/core"
 	"github.com/valyala/fasthttp"
 )
 
@@ -22,11 +23,14 @@ func (h *Handler) associateBannerToSlot(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	if err := h.services.BannerSlots.AssociateBannerToSlot(h.ctx, bannerId, slotId); err != nil {
+	bannerSlot := core.BannerSlot{}
+	bannerSlot.ID, err = h.services.BannerSlots.AssociateBannerToSlot(h.ctx, bannerId, slotId)
+	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
 
+	h.setJSONResponse(ctx, bannerSlot)
 	ctx.SetStatusCode(http.StatusCreated)
 }
 

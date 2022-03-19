@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -23,11 +22,15 @@ func (h *Handler) initSocialGroupRoutes(r *router.Router) {
 }
 
 func (h *Handler) addSocialGroup(ctx *fasthttp.RequestCtx) {
-	if err := h.services.SocialGroups.AddSocialGroup(h.ctx, string(ctx.QueryArgs().Peek("description"))); err != nil {
+	socialGroup := core.SocialGroup{}
+	var err error
+	socialGroup.ID, err = h.services.SocialGroups.AddSocialGroup(h.ctx, string(ctx.QueryArgs().Peek("description")))
+	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
 
+	h.setJSONResponse(ctx, socialGroup)
 	ctx.SetStatusCode(http.StatusCreated)
 }
 
@@ -61,12 +64,6 @@ func (h *Handler) getSocialGroup(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	socialGroupJSON, err := json.Marshal(socialGroup)
-	if err != nil {
-		ctx.Error(err.Error(), 500)
-		return
-	}
 	ctx.SetStatusCode(http.StatusOK)
-	ctx.SetBody(socialGroupJSON)
-	h.setJSONResponse(ctx)
+	h.setJSONResponse(ctx, socialGroup)
 }

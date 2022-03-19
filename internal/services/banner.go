@@ -17,7 +17,7 @@ func NewBannerService(repo repository.Banners) *BannerService {
 	}
 }
 
-func (b *BannerService) AddBanner(ctx context.Context, description string) error {
+func (b *BannerService) AddBanner(ctx context.Context, description string) (int64, error) {
 	return b.repo.AddBanner(ctx, description)
 }
 
