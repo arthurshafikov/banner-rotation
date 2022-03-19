@@ -77,7 +77,7 @@ func (s *APITestSuite) SetupSuite() {
 }
 
 func (s *APITestSuite) TearDownTest() {
-	s.resetDatabase()
+	r.NoError(s.resetDatabase())
 }
 
 func (s *APITestSuite) TearDownSuite() {
