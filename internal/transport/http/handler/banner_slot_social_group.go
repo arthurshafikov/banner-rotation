@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -78,13 +77,6 @@ func (h *Handler) getBannerIdToShow(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	bannerIdJSON, err := json.Marshal(core.GetBannerResponse{ID: bannerId})
-	if err != nil {
-		ctx.Error(err.Error(), 500)
-		return
-	}
-
-	h.setJSONResponse(ctx)
-	ctx.SetBody(bannerIdJSON)
+	h.setJSONResponse(ctx, core.GetBannerResponse{ID: bannerId})
 	ctx.SetStatusCode(http.StatusOK)
 }

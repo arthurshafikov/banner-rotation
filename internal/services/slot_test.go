@@ -20,14 +20,18 @@ func getSlotRepoMock(t *testing.T) (context.Context, *mock_repository.MockSlots)
 
 func TestAddSlot(t *testing.T) {
 	ctx, slotRepo := getSlotRepoMock(t)
+	expectedSlot := core.Slot{
+		ID: 8,
+	}
 	gomock.InOrder(
-		slotRepo.EXPECT().AddSlot(ctx, "test_description").Return(nil),
+		slotRepo.EXPECT().AddSlot(ctx, "test_description").Return(expectedSlot.ID, nil),
 	)
 	s := NewSlotService(slotRepo)
 
-	err := s.AddSlot(ctx, "test_description")
+	slotId, err := s.AddSlot(ctx, "test_description")
 
 	require.NoError(t, err)
+	require.Equal(t, expectedSlot.ID, slotId)
 }
 
 func TestDeleteSlot(t *testing.T) {

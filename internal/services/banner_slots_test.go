@@ -20,14 +20,22 @@ func getBannerSlotRepoMock(t *testing.T) (context.Context, *mock_repository.Mock
 
 func TestAssociateBannerToSlot(t *testing.T) {
 	ctx, bannerSlotRepo := getBannerSlotRepoMock(t)
+	expectedBannerSlot := core.BannerSlot{
+		ID:       7,
+		BannerId: 1,
+		SlotId:   2,
+	}
 	gomock.InOrder(
-		bannerSlotRepo.EXPECT().AddBannerSlot(ctx, int64(1), int64(2)).Return(nil),
+		bannerSlotRepo.EXPECT().
+			AddBannerSlot(ctx, expectedBannerSlot.BannerId, expectedBannerSlot.SlotId).
+			Return(expectedBannerSlot.ID, nil),
 	)
 	bs := NewBannerSlotService(bannerSlotRepo)
 
-	err := bs.AssociateBannerToSlot(ctx, 1, 2)
+	bannerSlotId, err := bs.AssociateBannerToSlot(ctx, expectedBannerSlot.BannerId, expectedBannerSlot.SlotId)
 
 	require.NoError(t, err)
+	require.Equal(t, expectedBannerSlot.ID, bannerSlotId)
 }
 
 func TestDissociateBannerFromSlot(t *testing.T) {

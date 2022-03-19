@@ -31,8 +31,11 @@ func getMockSocialGroupService(t *testing.T) (*Handler, *mock_services.MockSocia
 
 func TestAddSocialGroup(t *testing.T) {
 	handler, socialGroupServiceMock, _, ctx := getMockSocialGroupService(t)
+	expectedSocialGroup := core.SocialGroup{
+		ID: 5,
+	}
 	gomock.InOrder(
-		socialGroupServiceMock.EXPECT().AddSocialGroup(ctx, "value"),
+		socialGroupServiceMock.EXPECT().AddSocialGroup(ctx, "value").Return(expectedSocialGroup.ID, nil),
 	)
 	req := fasthttp.AcquireRequest()
 	req.SetRequestURI("http://localhost")
@@ -41,6 +44,9 @@ func TestAddSocialGroup(t *testing.T) {
 	resp := fasthttp.AcquireResponse()
 	require.NoError(t, serve(handler.addSocialGroup, req, resp))
 	require.Equal(t, http.StatusCreated, resp.StatusCode())
+	expectedJSON, err := json.Marshal(expectedSocialGroup)
+	require.NoError(t, err)
+	require.Equal(t, expectedJSON, resp.Body())
 }
 
 func TestDeleteSocialGroup(t *testing.T) {

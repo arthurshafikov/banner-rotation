@@ -17,7 +17,7 @@ func NewBannerSlotService(repo repository.BannerSlots) *BannerSlotService {
 	}
 }
 
-func (bs *BannerSlotService) AssociateBannerToSlot(ctx context.Context, bannerId, slotId int64) error {
+func (bs *BannerSlotService) AssociateBannerToSlot(ctx context.Context, bannerId, slotId int64) (int64, error) {
 	return bs.repo.AddBannerSlot(ctx, bannerId, slotId)
 }
 

@@ -33,8 +33,11 @@ func getMockBannerService(t *testing.T) (*Handler, *mock_services.MockBanners, *
 
 func TestAddBanner(t *testing.T) {
 	handler, bannerServiceMock, _, ctx := getMockBannerService(t)
+	expectedBanner := core.Banner{
+		ID: 5,
+	}
 	gomock.InOrder(
-		bannerServiceMock.EXPECT().AddBanner(ctx, "value"),
+		bannerServiceMock.EXPECT().AddBanner(ctx, "value").Return(expectedBanner.ID, nil),
 	)
 	req := fasthttp.AcquireRequest()
 	req.SetRequestURI("http://localhost")
@@ -43,6 +46,9 @@ func TestAddBanner(t *testing.T) {
 	resp := fasthttp.AcquireResponse()
 	require.NoError(t, serve(handler.addBanner, req, resp))
 	require.Equal(t, http.StatusCreated, resp.StatusCode())
+	expectedJSON, err := json.Marshal(expectedBanner)
+	require.NoError(t, err)
+	require.Equal(t, expectedJSON, resp.Body())
 }
 
 func TestDeleteBanner(t *testing.T) {

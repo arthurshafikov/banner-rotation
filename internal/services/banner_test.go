@@ -20,14 +20,18 @@ func getBannerRepoMock(t *testing.T) (context.Context, *mock_repository.MockBann
 
 func TestAddBanner(t *testing.T) {
 	ctx, bannerRepo := getBannerRepoMock(t)
+	expectedBanner := core.Banner{
+		ID: 5,
+	}
 	gomock.InOrder(
-		bannerRepo.EXPECT().AddBanner(ctx, "test_description").Return(nil),
+		bannerRepo.EXPECT().AddBanner(ctx, "test_description").Return(expectedBanner.ID, nil),
 	)
 	b := NewBannerService(bannerRepo)
 
-	err := b.AddBanner(ctx, "test_description")
+	bannerId, err := b.AddBanner(ctx, "test_description")
 
 	require.NoError(t, err)
+	require.Equal(t, expectedBanner.ID, bannerId)
 }
 
 func TestDeleteBanner(t *testing.T) {

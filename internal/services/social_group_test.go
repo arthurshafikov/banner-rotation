@@ -20,14 +20,18 @@ func getSocialGroupRepoMock(t *testing.T) (context.Context, *mock_repository.Moc
 
 func TestAddSocialGroup(t *testing.T) {
 	ctx, socialGroupRepo := getSocialGroupRepoMock(t)
+	expectedSocialGroup := core.SocialGroup{
+		ID: 5,
+	}
 	gomock.InOrder(
-		socialGroupRepo.EXPECT().AddSocialGroup(ctx, "test_description").Return(nil),
+		socialGroupRepo.EXPECT().AddSocialGroup(ctx, "test_description").Return(expectedSocialGroup.ID, nil),
 	)
 	sg := NewSocialGroupService(socialGroupRepo)
 
-	err := sg.AddSocialGroup(ctx, "test_description")
+	socialGroupId, err := sg.AddSocialGroup(ctx, "test_description")
 
 	require.NoError(t, err)
+	require.Equal(t, expectedSocialGroup.ID, socialGroupId)
 }
 
 func TestDeleteSocialGroup(t *testing.T) {

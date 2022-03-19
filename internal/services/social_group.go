@@ -17,7 +17,7 @@ func NewSocialGroupService(repo repository.SocialGroups) *SocialGroupService {
 	}
 }
 
-func (sg *SocialGroupService) AddSocialGroup(ctx context.Context, description string) error {
+func (sg *SocialGroupService) AddSocialGroup(ctx context.Context, description string) (int64, error) {
 	return sg.repo.AddSocialGroup(ctx, description)
 }
 

@@ -17,7 +17,7 @@ func NewSlotService(repo repository.Slots) *SlotService {
 	}
 }
 
-func (b *SlotService) AddSlot(ctx context.Context, description string) error {
+func (b *SlotService) AddSlot(ctx context.Context, description string) (int64, error) {
 	return b.repo.AddSlot(ctx, description)
 }
 

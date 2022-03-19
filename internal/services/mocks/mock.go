@@ -36,11 +36,12 @@ func (m *MockBanners) EXPECT() *MockBannersMockRecorder {
 }
 
 // AddBanner mocks base method.
-func (m *MockBanners) AddBanner(ctx context.Context, description string) error {
+func (m *MockBanners) AddBanner(ctx context.Context, description string) (int64, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddBanner", ctx, description)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // AddBanner indicates an expected call of AddBanner.
@@ -102,11 +103,12 @@ func (m *MockSlots) EXPECT() *MockSlotsMockRecorder {
 }
 
 // AddSlot mocks base method.
-func (m *MockSlots) AddSlot(ctx context.Context, description string) error {
+func (m *MockSlots) AddSlot(ctx context.Context, description string) (int64, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddSlot", ctx, description)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // AddSlot indicates an expected call of AddSlot.
@@ -168,11 +170,12 @@ func (m *MockBannerSlots) EXPECT() *MockBannerSlotsMockRecorder {
 }
 
 // AssociateBannerToSlot mocks base method.
-func (m *MockBannerSlots) AssociateBannerToSlot(ctx context.Context, bannerId, slotId int64) error {
+func (m *MockBannerSlots) AssociateBannerToSlot(ctx context.Context, bannerId, slotId int64) (int64, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AssociateBannerToSlot", ctx, bannerId, slotId)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // AssociateBannerToSlot indicates an expected call of AssociateBannerToSlot.
@@ -249,11 +252,12 @@ func (m *MockSocialGroups) EXPECT() *MockSocialGroupsMockRecorder {
 }
 
 // AddSocialGroup mocks base method.
-func (m *MockSocialGroups) AddSocialGroup(ctx context.Context, description string) error {
+func (m *MockSocialGroups) AddSocialGroup(ctx context.Context, description string) (int64, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddSocialGroup", ctx, description)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // AddSocialGroup indicates an expected call of AddSocialGroup.

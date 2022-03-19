@@ -31,8 +31,11 @@ func getMockSlotService(t *testing.T) (*Handler, *mock_services.MockSlots, *mock
 
 func TestAddSlot(t *testing.T) {
 	handler, slotServiceMock, _, ctx := getMockSlotService(t)
+	expectedSlot := core.Slot{
+		ID: 8,
+	}
 	gomock.InOrder(
-		slotServiceMock.EXPECT().AddSlot(ctx, "value"),
+		slotServiceMock.EXPECT().AddSlot(ctx, "value").Return(expectedSlot.ID, nil),
 	)
 	req := fasthttp.AcquireRequest()
 	req.SetRequestURI("http://localhost")
@@ -41,6 +44,9 @@ func TestAddSlot(t *testing.T) {
 	resp := fasthttp.AcquireResponse()
 	require.NoError(t, serve(handler.addSlot, req, resp))
 	require.Equal(t, http.StatusCreated, resp.StatusCode())
+	expectedJSON, err := json.Marshal(expectedSlot)
+	require.NoError(t, err)
+	require.Equal(t, expectedJSON, resp.Body())
 }
 
 func TestDeleteSlot(t *testing.T) {

@@ -13,13 +13,14 @@ func TestAddSocialGroup(t *testing.T) {
 	defer mockDB.Close()
 	socialGroupRepo := NewSocialGroups(sqlxDB)
 
-	mock.ExpectQuery("INSERT INTO social_groups \\(description\\) VALUES \\(\\$1\\)").
+	mock.ExpectQuery("INSERT INTO social_groups \\(description\\) VALUES \\(\\$1\\) RETURNING id;").
 		WithArgs("test_description").
-		WillReturnRows(sqlmock.NewRows([]string{}))
+		WillReturnRows(sqlmock.NewRows([]string{"id"}).FromCSVString("2"))
 
-	err := socialGroupRepo.AddSocialGroup(ctx, "test_description")
+	socialGroupId, err := socialGroupRepo.AddSocialGroup(ctx, "test_description")
 	require.NoError(t, err)
 	require.NoError(t, mock.ExpectationsWereMet())
+	require.Equal(t, int64(2), socialGroupId)
 }
 
 func TestDeleteSocialGroup(t *testing.T) {

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -23,11 +22,15 @@ func (h *Handler) initBannerRoutes(r *router.Router) {
 }
 
 func (h *Handler) addBanner(ctx *fasthttp.RequestCtx) {
-	if err := h.services.Banners.AddBanner(h.ctx, string(ctx.QueryArgs().Peek("description"))); err != nil {
+	banner := core.Banner{}
+	var err error
+	banner.ID, err = h.services.Banners.AddBanner(h.ctx, string(ctx.QueryArgs().Peek("description")))
+	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
 
+	h.setJSONResponse(ctx, banner)
 	ctx.SetStatusCode(http.StatusCreated)
 }
 
@@ -61,12 +64,6 @@ func (h *Handler) getBanner(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	bannerJSON, err := json.Marshal(banner)
-	if err != nil {
-		ctx.Error(err.Error(), 500)
-		return
-	}
 	ctx.SetStatusCode(http.StatusOK)
-	ctx.SetBody(bannerJSON)
-	h.setJSONResponse(ctx)
+	h.setJSONResponse(ctx, banner)
 }
