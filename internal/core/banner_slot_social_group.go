@@ -1,5 +1,7 @@
 package core
 
+import "time"
+
 var BannerSlotSocialGroupTable = "banner_slot_social_groups"
 
 type BannerSlotSocialGroup struct {
@@ -23,4 +25,11 @@ type GetBannerRequest struct {
 
 type GetBannerResponse struct {
 	ID int64 `json:"id"`
+}
+
+type IncrementEvent struct {
+	BannerId      int64
+	SlotId        int64
+	SocialGroupId int64
+	Datetime      time.Time
 }

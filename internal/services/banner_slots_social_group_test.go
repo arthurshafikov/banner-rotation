@@ -3,12 +3,14 @@ package services
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"github.com/thewolf27/banner-rotation/internal/core"
 	mock_repository "github.com/thewolf27/banner-rotation/internal/repository/mocks"
 	mock_services "github.com/thewolf27/banner-rotation/internal/services/mocks"
+	"github.com/tkuchiki/faketime"
 )
 
 func getBannerSlotSocialGroupRepoMock(t *testing.T) (context.Context, *mock_repository.MockBannerSlotSocialGroups) {
@@ -26,9 +28,17 @@ func getBannerSlotServiceMock(t *testing.T) *mock_services.MockBannerSlots {
 	return mock_services.NewMockBannerSlots(ctl)
 }
 
+func getQueueMock(t *testing.T) *mock_services.MockQueue {
+	t.Helper()
+	ctl := gomock.NewController(t)
+
+	return mock_services.NewMockQueue(ctl)
+}
+
 func TestIncrementClick(t *testing.T) {
 	ctx, bannerSlotSocialGroupRepo := getBannerSlotSocialGroupRepoMock(t)
 	bannerSlotService := getBannerSlotServiceMock(t)
+	queueMock := getQueueMock(t)
 	bannerSlot := core.BannerSlot{
 		ID:       23,
 		BannerId: 3,
@@ -40,11 +50,21 @@ func TestIncrementClick(t *testing.T) {
 		SocialGroupId: 6,
 	}
 
+	timeNow := time.Date(2022, time.March, 10, 23, 0, 0, 0, time.UTC)
+	f := faketime.NewFaketimeWithTime(timeNow)
+	defer f.Undo()
+	f.Do()
 	gomock.InOrder(
 		bannerSlotService.EXPECT().GetByBannerAndSlotIds(ctx, input.BannerId, input.SlotId).Return(&bannerSlot, nil),
 		bannerSlotSocialGroupRepo.EXPECT().IncrementClick(ctx, bannerSlot.ID, input.SocialGroupId).Return(nil),
+		queueMock.EXPECT().AddToQueue("clicks", core.IncrementEvent{
+			BannerId:      bannerSlot.BannerId,
+			SlotId:        bannerSlot.SlotId,
+			SocialGroupId: input.SocialGroupId,
+			Datetime:      timeNow,
+		}).Return(nil),
 	)
-	bssg := NewBannerSlotSocialGroupService(bannerSlotSocialGroupRepo, bannerSlotService, .1)
+	bssg := NewBannerSlotSocialGroupService(bannerSlotSocialGroupRepo, bannerSlotService, .1, queueMock)
 
 	err := bssg.IncrementClick(ctx, input)
 
@@ -54,6 +74,7 @@ func TestIncrementClick(t *testing.T) {
 func TestGetBannerIdToShow(t *testing.T) {
 	ctx, bannerSlotSocialGroupRepo := getBannerSlotSocialGroupRepoMock(t)
 	bannerSlotService := getBannerSlotServiceMock(t)
+	queueMock := getQueueMock(t)
 	slotId := int64(1)
 	mostProfitableBannerSlot := core.BannerSlot{
 		ID:       23,
@@ -69,6 +90,11 @@ func TestGetBannerIdToShow(t *testing.T) {
 		SlotId:        slotId,
 		SocialGroupId: 6,
 	}
+
+	timeNow := time.Date(2022, time.March, 10, 23, 0, 0, 0, time.UTC)
+	f := faketime.NewFaketimeWithTime(timeNow)
+	defer f.Undo()
+	f.Do()
 	gomock.InOrder(
 		bannerSlotSocialGroupRepo.EXPECT().GetTheMostProfitableBannerId(ctx, input.SlotId, input.SocialGroupId).
 			Return(mostProfitableBannerSlot.BannerId, nil),
@@ -78,8 +104,14 @@ func TestGetBannerIdToShow(t *testing.T) {
 			Return(&randomBannerSlot, nil),
 		bannerSlotSocialGroupRepo.EXPECT().IncrementView(ctx, randomBannerSlot.ID, input.SocialGroupId).
 			Return(nil),
+		queueMock.EXPECT().AddToQueue("views", core.IncrementEvent{
+			BannerId:      randomBannerSlot.BannerId,
+			SlotId:        randomBannerSlot.SlotId,
+			SocialGroupId: input.SocialGroupId,
+			Datetime:      timeNow,
+		}).Return(nil),
 	)
-	bssg := NewBannerSlotSocialGroupService(bannerSlotSocialGroupRepo, bannerSlotService, 1)
+	bssg := NewBannerSlotSocialGroupService(bannerSlotSocialGroupRepo, bannerSlotService, 1, queueMock)
 
 	result, err := bssg.GetBannerIdToShow(ctx, input)
 

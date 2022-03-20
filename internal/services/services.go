@@ -45,9 +45,14 @@ type Services struct {
 	BannerSlotSocialGroups
 }
 
+type Queue interface {
+	AddToQueue(topic string, value interface{}) error
+}
+
 type Dependencies struct {
 	Repository  *repository.Repository
 	EGreedValue float64
+	Queue
 }
 
 func NewServices(deps Dependencies) *Services {
@@ -59,6 +64,7 @@ func NewServices(deps Dependencies) *Services {
 		deps.Repository.BannerSlotSocialGroups,
 		bannerSlotService,
 		deps.EGreedValue,
+		deps.Queue,
 	)
 
 	return &Services{

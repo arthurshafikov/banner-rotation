@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"math/rand"
+	"time"
 
 	"github.com/thewolf27/banner-rotation/internal/core"
 	"github.com/thewolf27/banner-rotation/internal/repository"
@@ -13,17 +14,20 @@ type BannerSlotSocialGroupService struct {
 	eGreedValue float64
 
 	bannerSlotService BannerSlots
+	queue             Queue
 }
 
 func NewBannerSlotSocialGroupService(
 	repo repository.BannerSlotSocialGroups,
 	bannerSlotService BannerSlots,
 	eGreedValue float64,
+	queue Queue,
 ) *BannerSlotSocialGroupService {
 	return &BannerSlotSocialGroupService{
 		repo:              repo,
 		eGreedValue:       eGreedValue,
 		bannerSlotService: bannerSlotService,
+		queue:             queue,
 	}
 }
 
@@ -33,7 +37,16 @@ func (bssg *BannerSlotSocialGroupService) IncrementClick(ctx context.Context, in
 		return err
 	}
 
-	return bssg.repo.IncrementClick(ctx, bannerSlot.ID, inp.SocialGroupId)
+	if err := bssg.repo.IncrementClick(ctx, bannerSlot.ID, inp.SocialGroupId); err != nil {
+		return nil
+	}
+
+	return bssg.queue.AddToQueue("clicks", core.IncrementEvent{
+		BannerId:      inp.BannerId,
+		SlotId:        inp.SlotId,
+		SocialGroupId: inp.SocialGroupId,
+		Datetime:      time.Now(),
+	})
 }
 
 func (bssg *BannerSlotSocialGroupService) GetBannerIdToShow(
@@ -57,6 +70,15 @@ func (bssg *BannerSlotSocialGroupService) GetBannerIdToShow(
 		return 0, err
 	}
 	if err := bssg.repo.IncrementView(ctx, bannerSlot.ID, inp.SocialGroupId); err != nil {
+		return 0, err
+	}
+
+	if err := bssg.queue.AddToQueue("views", core.IncrementEvent{
+		BannerId:      bannerId,
+		SlotId:        inp.SlotId,
+		SocialGroupId: inp.SocialGroupId,
+		Datetime:      time.Now(),
+	}); err != nil {
 		return 0, err
 	}
 
