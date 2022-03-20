@@ -346,3 +346,40 @@ func (mr *MockBannerSlotSocialGroupsMockRecorder) IncrementClick(ctx, inp interf
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncrementClick", reflect.TypeOf((*MockBannerSlotSocialGroups)(nil).IncrementClick), ctx, inp)
 }
+
+// MockQueue is a mock of Queue interface.
+type MockQueue struct {
+	ctrl     *gomock.Controller
+	recorder *MockQueueMockRecorder
+}
+
+// MockQueueMockRecorder is the mock recorder for MockQueue.
+type MockQueueMockRecorder struct {
+	mock *MockQueue
+}
+
+// NewMockQueue creates a new mock instance.
+func NewMockQueue(ctrl *gomock.Controller) *MockQueue {
+	mock := &MockQueue{ctrl: ctrl}
+	mock.recorder = &MockQueueMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockQueue) EXPECT() *MockQueueMockRecorder {
+	return m.recorder
+}
+
+// AddToQueue mocks base method.
+func (m *MockQueue) AddToQueue(topic string, value interface{}) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddToQueue", topic, value)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AddToQueue indicates an expected call of AddToQueue.
+func (mr *MockQueueMockRecorder) AddToQueue(topic, value interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddToQueue", reflect.TypeOf((*MockQueue)(nil).AddToQueue), topic, value)
+}

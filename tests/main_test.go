@@ -18,6 +18,7 @@ import (
 	"github.com/thewolf27/banner-rotation/internal/transport/http"
 	"github.com/thewolf27/banner-rotation/internal/transport/http/handler"
 	"github.com/thewolf27/banner-rotation/pkg/postgres"
+	"github.com/thewolf27/banner-rotation/tests/mocks"
 )
 
 var (
@@ -62,18 +63,19 @@ func (s *APITestSuite) SetupSuite() {
 		},
 	}
 
+	queue := mocks.NewQueueMock()
+
 	s.db = postgres.NewSqlxDb(s.ctx, s.config.DSN)
 	s.repos = repository.NewRepository(s.db)
 	services := services.NewServices(services.Dependencies{
 		Repository:  s.repos,
 		EGreedValue: s.config.MultihandedBanditConfig.EGreedValue,
+		Queue:       queue,
 	})
 
 	s.handler = handler.NewHandler(s.ctx, services, http.NewRequestParser())
 	s.server = http.NewServer(s.ctx, s.handler)
-	go func() {
-		s.server.Serve(s.config.ServerConfig.Port)
-	}()
+	go s.server.Serve(s.config.ServerConfig.Port)
 }
 
 func (s *APITestSuite) TearDownTest() {

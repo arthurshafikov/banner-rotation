@@ -3,6 +3,8 @@ package app
 import (
 	"context"
 	"flag"
+	"os/signal"
+	"syscall"
 
 	"github.com/thewolf27/banner-rotation/internal/config"
 	"github.com/thewolf27/banner-rotation/internal/repository"
@@ -10,6 +12,7 @@ import (
 	"github.com/thewolf27/banner-rotation/internal/transport/http"
 	"github.com/thewolf27/banner-rotation/internal/transport/http/handler"
 	"github.com/thewolf27/banner-rotation/pkg/postgres"
+	"github.com/thewolf27/banner-rotation/pkg/queue"
 )
 
 var (
@@ -23,7 +26,8 @@ func init() {
 func Run() {
 	flag.Parse()
 
-	ctx := context.Background()
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+	defer cancel()
 
 	config := config.NewConfig(envFileLocation)
 
@@ -31,12 +35,16 @@ func Run() {
 
 	repos := repository.NewRepository(db)
 
+	queue := queue.NewQueue(ctx, config.QueueConfig.BrokerAddress)
+	go queue.Dispatch()
+
 	services := services.NewServices(services.Dependencies{
 		Repository:  repos,
 		EGreedValue: config.MultihandedBanditConfig.EGreedValue,
+		Queue:       queue,
 	})
 
 	handler := handler.NewHandler(ctx, services, http.NewRequestParser())
 	s := http.NewServer(ctx, handler)
-	s.Serve(config.Port)
+	s.Serve(config.ServerConfig.Port)
 }

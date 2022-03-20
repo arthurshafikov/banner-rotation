@@ -11,6 +11,7 @@ type Config struct {
 	DatabaseConfig
 	ServerConfig
 	MultihandedBanditConfig
+	QueueConfig
 }
 
 type DatabaseConfig struct {
@@ -23,6 +24,10 @@ type ServerConfig struct {
 
 type MultihandedBanditConfig struct {
 	EGreedValue float64
+}
+
+type QueueConfig struct {
+	BrokerAddress string
 }
 
 func NewConfig(envFileLocation string) *Config {
@@ -45,6 +50,9 @@ func NewConfig(envFileLocation string) *Config {
 		},
 		MultihandedBanditConfig: MultihandedBanditConfig{
 			EGreedValue: eGreedValue,
+		},
+		QueueConfig: QueueConfig{
+			BrokerAddress: os.Getenv("BROKER_ADDRESS"),
 		},
 	}
 }
