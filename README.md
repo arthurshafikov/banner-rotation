@@ -13,6 +13,12 @@ This project has as unit, as an integration tests.
 
 Also all statistics about clicks and views are sending to Kafka. So we can take this statistic and handle it somewhere else (like in Graphana for example) to see which banners are the most profitable and which are not.
 
+# Database
+
+The database structure is looking like this
+
+![Drag Racing](./.github/database.png)
+
 # Commands
 
 ## Docker-compose
