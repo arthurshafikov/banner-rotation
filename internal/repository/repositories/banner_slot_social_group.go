@@ -60,8 +60,8 @@ func (bssg *BannerSlotSocialGroups) GetTheMostProfitableBannerId(
 	socialGroupId int64,
 ) (int64, error) {
 	var result = struct {
-		Banner_id int64   `db:"banner_id"`
-		Ctr       float64 `db:"ctr"`
+		BannerId int64   `db:"banner_id"`
+		Ctr      float64 `db:"ctr"`
 	}{}
 	escapeDivideByZero := fmt.Sprintf(`
 		CASE %[1]s.views
@@ -84,7 +84,7 @@ func (bssg *BannerSlotSocialGroups) GetTheMostProfitableBannerId(
 		return 0, err
 	}
 
-	return result.Banner_id, nil
+	return result.BannerId, nil
 }
 
 func (bssg *BannerSlotSocialGroups) firstOrCreate(

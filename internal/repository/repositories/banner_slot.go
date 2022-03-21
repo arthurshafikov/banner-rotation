@@ -61,7 +61,7 @@ func (bs *BannerSlots) GetRandomBannerIdExceptExcluded(
 	excludedBannerId int64,
 ) (int64, error) {
 	var result = struct {
-		Banner_id int64 `db:"banner_id"`
+		BannerId int64 `db:"banner_id"`
 	}{}
 	query := fmt.Sprintf(
 		`SELECT banner_id FROM %s
@@ -74,5 +74,5 @@ func (bs *BannerSlots) GetRandomBannerIdExceptExcluded(
 		return 0, err
 	}
 
-	return result.Banner_id, nil
+	return result.BannerId, nil
 }
