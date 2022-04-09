@@ -8,17 +8,17 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/arthurshafikov/banner-rotation/internal/config"
+	"github.com/arthurshafikov/banner-rotation/internal/core"
+	"github.com/arthurshafikov/banner-rotation/internal/repository"
+	"github.com/arthurshafikov/banner-rotation/internal/services"
+	"github.com/arthurshafikov/banner-rotation/internal/transport/http"
+	"github.com/arthurshafikov/banner-rotation/internal/transport/http/handler"
+	"github.com/arthurshafikov/banner-rotation/pkg/postgres"
+	"github.com/arthurshafikov/banner-rotation/tests/mocks"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"github.com/thewolf27/banner-rotation/internal/config"
-	"github.com/thewolf27/banner-rotation/internal/core"
-	"github.com/thewolf27/banner-rotation/internal/repository"
-	"github.com/thewolf27/banner-rotation/internal/services"
-	"github.com/thewolf27/banner-rotation/internal/transport/http"
-	"github.com/thewolf27/banner-rotation/internal/transport/http/handler"
-	"github.com/thewolf27/banner-rotation/pkg/postgres"
-	"github.com/thewolf27/banner-rotation/tests/mocks"
 )
 
 var (

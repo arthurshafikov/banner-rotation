@@ -1,4 +1,4 @@
-module github.com/thewolf27/banner-rotation
+module github.com/arthurshafikov/banner-rotation
 
 go 1.17
 

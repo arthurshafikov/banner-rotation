@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/arthurshafikov/banner-rotation/internal/transport/http/handler"
 	"github.com/fasthttp/router"
-	"github.com/thewolf27/banner-rotation/internal/transport/http/handler"
 	"github.com/valyala/fasthttp"
 )
 

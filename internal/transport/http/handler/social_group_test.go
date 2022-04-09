@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/arthurshafikov/banner-rotation/internal/core"
+	"github.com/arthurshafikov/banner-rotation/internal/services"
+	mock_services "github.com/arthurshafikov/banner-rotation/internal/services/mocks"
+	mock_handler "github.com/arthurshafikov/banner-rotation/internal/transport/http/handler/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"github.com/thewolf27/banner-rotation/internal/core"
-	"github.com/thewolf27/banner-rotation/internal/services"
-	mock_services "github.com/thewolf27/banner-rotation/internal/services/mocks"
-	mock_handler "github.com/thewolf27/banner-rotation/internal/transport/http/handler/mocks"
 	"github.com/valyala/fasthttp"
 )
 

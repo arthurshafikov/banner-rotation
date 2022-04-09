@@ -6,8 +6,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/arthurshafikov/banner-rotation/internal/core"
 	"github.com/jmoiron/sqlx"
-	"github.com/thewolf27/banner-rotation/internal/core"
 )
 
 type Banners struct {

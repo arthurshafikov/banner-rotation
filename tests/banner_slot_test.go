@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/thewolf27/banner-rotation/internal/core"
+	"github.com/arthurshafikov/banner-rotation/internal/core"
 )
 
 func (s *APITestSuite) TestAssociateBannerToSlot() {

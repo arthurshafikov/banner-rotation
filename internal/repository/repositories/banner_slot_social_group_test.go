@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/arthurshafikov/banner-rotation/internal/core"
 	"github.com/stretchr/testify/require"
-	"github.com/thewolf27/banner-rotation/internal/core"
 )
 
 func TestIncrementClick(t *testing.T) {

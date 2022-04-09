@@ -19,7 +19,7 @@ RUN CGO_ENABLED=0 go build \
 
 FROM alpine:3.9
 
-LABEL MAINTAINERS="thewolf27"
+LABEL MAINTAINERS="arthurshafikov"
 
 ENV BIN_FILE "/opt/app/app"
 COPY --from=build ${BIN_FILE} ${BIN_FILE}

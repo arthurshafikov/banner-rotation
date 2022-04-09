@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
+	"github.com/arthurshafikov/banner-rotation/internal/core"
+	mock_repository "github.com/arthurshafikov/banner-rotation/internal/repository/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"github.com/thewolf27/banner-rotation/internal/core"
-	mock_repository "github.com/thewolf27/banner-rotation/internal/repository/mocks"
 )
 
 func getBannerRepoMock(t *testing.T) (context.Context, *mock_repository.MockBanners) {

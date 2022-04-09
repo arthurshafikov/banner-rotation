@@ -3,9 +3,9 @@ package repository
 import (
 	"context"
 
+	"github.com/arthurshafikov/banner-rotation/internal/core"
+	"github.com/arthurshafikov/banner-rotation/internal/repository/repositories"
 	"github.com/jmoiron/sqlx"
-	"github.com/thewolf27/banner-rotation/internal/core"
-	"github.com/thewolf27/banner-rotation/internal/repository/repositories"
 )
 
 type Banners interface {

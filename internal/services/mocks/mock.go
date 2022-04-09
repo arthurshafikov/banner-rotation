@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	core "github.com/thewolf27/banner-rotation/internal/core"
+	core "github.com/arthurshafikov/banner-rotation/internal/core"
 )
 
 // MockBanners is a mock of Banners interface.

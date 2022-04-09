@@ -5,11 +5,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/arthurshafikov/banner-rotation/internal/core"
+	mock_repository "github.com/arthurshafikov/banner-rotation/internal/repository/mocks"
+	mock_services "github.com/arthurshafikov/banner-rotation/internal/services/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"github.com/thewolf27/banner-rotation/internal/core"
-	mock_repository "github.com/thewolf27/banner-rotation/internal/repository/mocks"
-	mock_services "github.com/thewolf27/banner-rotation/internal/services/mocks"
 	"github.com/tkuchiki/faketime"
 )
 

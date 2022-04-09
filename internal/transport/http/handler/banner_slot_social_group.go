@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/arthurshafikov/banner-rotation/internal/core"
 	"github.com/fasthttp/router"
-	"github.com/thewolf27/banner-rotation/internal/core"
 	"github.com/valyala/fasthttp"
 )
 

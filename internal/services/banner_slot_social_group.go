@@ -5,8 +5,8 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/thewolf27/banner-rotation/internal/core"
-	"github.com/thewolf27/banner-rotation/internal/repository"
+	"github.com/arthurshafikov/banner-rotation/internal/core"
+	"github.com/arthurshafikov/banner-rotation/internal/repository"
 )
 
 type BannerSlotSocialGroupService struct {

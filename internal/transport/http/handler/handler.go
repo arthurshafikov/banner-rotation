@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/arthurshafikov/banner-rotation/internal/services"
 	"github.com/fasthttp/router"
-	"github.com/thewolf27/banner-rotation/internal/services"
 	"github.com/valyala/fasthttp"
 )
 

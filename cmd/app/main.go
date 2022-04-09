@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/thewolf27/banner-rotation/internal/app"
+	"github.com/arthurshafikov/banner-rotation/internal/app"
 )
 
 func main() {
