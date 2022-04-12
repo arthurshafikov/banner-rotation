@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/segmentio/kafka-go"
+	kafka "github.com/segmentio/kafka-go"
 )
 
 type QueueElement struct {

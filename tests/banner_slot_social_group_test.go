@@ -248,7 +248,7 @@ func (s *APITestSuite) TestGetBannerIdToShowEveryBannerWasShowed() {
 func (s *APITestSuite) insertBannerSlotSocialGroup(
 	bannerSlotSocialGroup *core.BannerSlotSocialGroup,
 ) error {
-	s.T().Helper()
+	s.T().Helper() //nolint
 
 	return s.db.QueryRowxContext(
 		s.ctx,

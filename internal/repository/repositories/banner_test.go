@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"testing"
 
-	"github.com/DATA-DOG/go-sqlmock"
+	sqlmock "github.com/DATA-DOG/go-sqlmock"
 	"github.com/arthurshafikov/banner-rotation/internal/core"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"

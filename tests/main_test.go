@@ -48,7 +48,7 @@ func TestAPISuite(t *testing.T) {
 }
 
 func (s *APITestSuite) SetupSuite() {
-	r = s.Require()
+	r = s.Require() //nolint
 	s.ctx, s.ctxCancel = context.WithCancel(context.Background())
 
 	s.config = &config.Config{
