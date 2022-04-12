@@ -17,7 +17,9 @@ import (
 	"github.com/valyala/fasthttp/fasthttputil"
 )
 
-func getMockBannerService(t *testing.T) (*Handler, *mock_services.MockBanners, *mock_handler.MockRequestParser, context.Context) {
+func getMockBannerService(
+	t *testing.T,
+) (*Handler, *mock_services.MockBanners, *mock_handler.MockRequestParser, context.Context) {
 	t.Helper()
 
 	ctx := context.Background()
@@ -53,10 +55,10 @@ func TestAddBanner(t *testing.T) {
 
 func TestDeleteBanner(t *testing.T) {
 	handler, bannerServiceMock, requestParser, ctx := getMockBannerService(t)
-	bannerId := int64(20)
+	bannerID := int64(20)
 	gomock.InOrder(
-		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(bannerId, nil),
-		bannerServiceMock.EXPECT().DeleteBanner(ctx, bannerId).Return(nil),
+		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(bannerID, nil),
+		bannerServiceMock.EXPECT().DeleteBanner(ctx, bannerID).Return(nil),
 	)
 	req := fasthttp.AcquireRequest()
 	req.SetRequestURI("http://localhost")
@@ -80,9 +82,9 @@ func TestGetBanner(t *testing.T) {
 
 	resp := fasthttp.AcquireResponse()
 	require.NoError(t, serve(handler.getBanner, req, resp))
-	expectedBannerJson, err := json.Marshal(banner)
+	expectedBannerJSON, err := json.Marshal(banner)
 	require.NoError(t, err)
-	require.Equal(t, expectedBannerJson, resp.Body())
+	require.Equal(t, expectedBannerJSON, resp.Body())
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }
 

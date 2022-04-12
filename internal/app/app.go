@@ -15,9 +15,7 @@ import (
 	"github.com/arthurshafikov/banner-rotation/pkg/queue"
 )
 
-var (
-	envFileLocation string
-)
+var envFileLocation string
 
 func init() {
 	flag.StringVar(&envFileLocation, "env", "./.env", "Path to .env file")
@@ -31,7 +29,7 @@ func Run() {
 
 	config := config.NewConfig(envFileLocation)
 
-	db := postgres.NewSqlxDb(ctx, config.DSN)
+	db := postgres.NewSqlxDB(ctx, config.DSN)
 
 	repos := repository.NewRepository(db)
 

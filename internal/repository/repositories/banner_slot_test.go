@@ -17,10 +17,10 @@ func TestAddBannerSlot(t *testing.T) {
 		WithArgs(1, 2).
 		WillReturnRows(sqlmock.NewRows([]string{"id"}).FromCSVString("2"))
 
-	bannerSlotId, err := bannerSlotRepo.AddBannerSlot(ctx, 1, 2)
+	bannerSlotID, err := bannerSlotRepo.AddBannerSlot(ctx, 1, 2)
 	require.NoError(t, err)
 	require.NoError(t, mock.ExpectationsWereMet())
-	require.Equal(t, int64(2), bannerSlotId)
+	require.Equal(t, int64(2), bannerSlotID)
 }
 
 func TestDeleteBannerSlot(t *testing.T) {
@@ -37,48 +37,48 @@ func TestDeleteBannerSlot(t *testing.T) {
 	require.NoError(t, mock.ExpectationsWereMet())
 }
 
-func TestGetByBannerAndSlotIds(t *testing.T) {
+func TestGetByBannerAndSlotIDs(t *testing.T) {
 	mockDB, mock, sqlxDB, ctx := newSQLXMock(t)
 	defer mockDB.Close()
 	bannerSlotRepo := NewBannerSlots(sqlxDB)
 	expected := core.BannerSlot{
 		ID:       25,
-		BannerId: 1,
-		SlotId:   2,
+		BannerID: 1,
+		SlotID:   2,
 	}
 
 	mock.ExpectQuery("SELECT \\* FROM banner_slots WHERE banner_id=\\$1 AND slot_id=\\$2").
-		WithArgs(expected.BannerId, expected.SlotId).
+		WithArgs(expected.BannerID, expected.SlotID).
 		WillReturnRows(sqlmock.NewRows([]string{"id", "banner_id", "slot_id"}).FromCSVString("25,1,2"))
 
-	result, err := bannerSlotRepo.GetByBannerAndSlotIds(ctx, 1, 2)
+	result, err := bannerSlotRepo.GetByBannerAndSlotIDs(ctx, 1, 2)
 	require.NoError(t, err)
 	require.Equal(t, &expected, result)
 	require.NoError(t, mock.ExpectationsWereMet())
 }
 
-func TestGetRandomBannerIdExceptExcluded(t *testing.T) {
+func TestGetRandomBannerIDExceptExcluded(t *testing.T) {
 	mockDB, mock, sqlxDB, ctx := newSQLXMock(t)
 	defer mockDB.Close()
 	bannerSlotRepo := NewBannerSlots(sqlxDB)
 	expected := core.BannerSlot{
 		ID:       25,
-		BannerId: 1,
-		SlotId:   2,
+		BannerID: 1,
+		SlotID:   2,
 	}
 	excludedBannerSlot := core.BannerSlot{
 		ID:       26,
-		BannerId: 3,
-		SlotId:   2,
+		BannerID: 3,
+		SlotID:   2,
 	}
 
 	mock.ExpectQuery(`SELECT banner_id FROM banner_slots WHERE slot_id = \$1 
 		AND banner_id != \$2 ORDER BY RANDOM\(\) LIMIT 1;`,
-	).WithArgs(expected.SlotId, excludedBannerSlot.BannerId).
+	).WithArgs(expected.SlotID, excludedBannerSlot.BannerID).
 		WillReturnRows(sqlmock.NewRows([]string{"banner_id"}).FromCSVString("1"))
 
-	result, err := bannerSlotRepo.GetRandomBannerIdExceptExcluded(ctx, expected.SlotId, excludedBannerSlot.BannerId)
+	result, err := bannerSlotRepo.GetRandomBannerIDExceptExcluded(ctx, expected.SlotID, excludedBannerSlot.BannerID)
 	require.NoError(t, err)
-	require.Equal(t, expected.BannerId, result)
+	require.Equal(t, expected.BannerID, result)
 	require.NoError(t, mock.ExpectationsWereMet())
 }

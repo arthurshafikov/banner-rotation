@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq" //nolint:gci
+	_ "github.com/lib/pq" //nolint
 )
 
-func NewSqlxDb(ctx context.Context, dsn string) *sqlx.DB {
+func NewSqlxDB(ctx context.Context, dsn string) *sqlx.DB {
 	db, err := sqlx.Connect("postgres", dsn)
 	go func() {
 		<-ctx.Done()

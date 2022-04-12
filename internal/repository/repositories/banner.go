@@ -23,11 +23,11 @@ func NewBanners(db *sqlx.DB) *Banners {
 }
 
 func (b *Banners) AddBanner(ctx context.Context, description string) (int64, error) {
-	var bannerId int64
+	var bannerID int64
 	query := fmt.Sprintf("INSERT INTO %s (description) VALUES ($1) RETURNING id;", b.table)
-	err := b.db.QueryRowxContext(ctx, query, description).Scan(&bannerId)
+	err := b.db.QueryRowxContext(ctx, query, description).Scan(&bannerID)
 
-	return bannerId, err
+	return bannerID, err
 }
 
 func (b *Banners) DeleteBanner(ctx context.Context, id int64) error {

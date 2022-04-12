@@ -13,10 +13,10 @@ func (h *Handler) initBannerRoutes(r *router.Router) {
 	banners := r.Group("/banner")
 	{
 		banners.POST("/add", h.addBanner)
-		bannersId := banners.Group("/{id:[0-9]+}")
+		bannersID := banners.Group("/{id:[0-9]+}")
 		{
-			bannersId.GET("", h.getBanner)
-			bannersId.DELETE("/delete", h.deleteBanner)
+			bannersID.GET("", h.getBanner)
+			bannersID.DELETE("/delete", h.deleteBanner)
 		}
 	}
 }
@@ -35,7 +35,7 @@ func (h *Handler) addBanner(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) deleteBanner(ctx *fasthttp.RequestCtx) {
-	id, err := h.getIdFromRequest(ctx)
+	id, err := h.getIDFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -49,7 +49,7 @@ func (h *Handler) deleteBanner(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) getBanner(ctx *fasthttp.RequestCtx) {
-	id, err := h.getIdFromRequest(ctx)
+	id, err := h.getIDFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return

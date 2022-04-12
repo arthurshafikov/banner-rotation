@@ -15,7 +15,9 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-func getMockSocialGroupService(t *testing.T) (*Handler, *mock_services.MockSocialGroups, *mock_handler.MockRequestParser, context.Context) {
+func getMockSocialGroupService(
+	t *testing.T,
+) (*Handler, *mock_services.MockSocialGroups, *mock_handler.MockRequestParser, context.Context) {
 	t.Helper()
 
 	ctx := context.Background()
@@ -51,10 +53,10 @@ func TestAddSocialGroup(t *testing.T) {
 
 func TestDeleteSocialGroup(t *testing.T) {
 	handler, socialGroupServiceMock, requestParser, ctx := getMockSocialGroupService(t)
-	socialGroupId := int64(20)
+	socialGroupID := int64(20)
 	gomock.InOrder(
-		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(socialGroupId, nil),
-		socialGroupServiceMock.EXPECT().DeleteSocialGroup(ctx, socialGroupId).Return(nil),
+		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(socialGroupID, nil),
+		socialGroupServiceMock.EXPECT().DeleteSocialGroup(ctx, socialGroupID).Return(nil),
 	)
 	req := fasthttp.AcquireRequest()
 	req.SetRequestURI("http://localhost")
@@ -79,8 +81,8 @@ func TestGetSocialGroup(t *testing.T) {
 	resp := fasthttp.AcquireResponse()
 	require.NoError(t, serve(handler.getSocialGroup, req, resp))
 
-	expectedSocialGroupJson, err := json.Marshal(socialGroup)
+	expectedSocialGroupJSON, err := json.Marshal(socialGroup)
 	require.NoError(t, err)
-	require.Equal(t, expectedSocialGroupJson, resp.Body())
+	require.Equal(t, expectedSocialGroupJSON, resp.Body())
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }

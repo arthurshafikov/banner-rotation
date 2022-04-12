@@ -20,10 +20,10 @@ type Slots interface {
 }
 
 type BannerSlots interface {
-	AssociateBannerToSlot(ctx context.Context, bannerId, slotId int64) (int64, error)
-	DissociateBannerFromSlot(ctx context.Context, bannerId, slotId int64) error
-	GetByBannerAndSlotIds(ctx context.Context, bannerId, slotId int64) (*core.BannerSlot, error)
-	GetRandomBannerIdExceptExcluded(ctx context.Context, slotId, excludedBannerId int64) (int64, error)
+	AssociateBannerToSlot(ctx context.Context, bannerID, slotID int64) (int64, error)
+	DissociateBannerFromSlot(ctx context.Context, bannerID, slotID int64) error
+	GetByBannerAndSlotIDs(ctx context.Context, bannerID, slotID int64) (*core.BannerSlot, error)
+	GetRandomBannerIDExceptExcluded(ctx context.Context, slotID, excludedBannerID int64) (int64, error)
 }
 
 type SocialGroups interface {
@@ -34,7 +34,7 @@ type SocialGroups interface {
 
 type BannerSlotSocialGroups interface {
 	IncrementClick(ctx context.Context, inp core.IncrementClickInput) error
-	GetBannerIdToShow(ctx context.Context, inp core.GetBannerRequest) (int64, error)
+	GetBannerIDToShow(ctx context.Context, inp core.GetBannerRequest) (int64, error)
 }
 
 type Services struct {

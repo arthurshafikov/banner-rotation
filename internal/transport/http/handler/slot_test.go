@@ -15,7 +15,9 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-func getMockSlotService(t *testing.T) (*Handler, *mock_services.MockSlots, *mock_handler.MockRequestParser, context.Context) {
+func getMockSlotService(
+	t *testing.T,
+) (*Handler, *mock_services.MockSlots, *mock_handler.MockRequestParser, context.Context) {
 	t.Helper()
 
 	ctx := context.Background()
@@ -51,10 +53,10 @@ func TestAddSlot(t *testing.T) {
 
 func TestDeleteSlot(t *testing.T) {
 	handler, slotServiceMock, requestParser, ctx := getMockSlotService(t)
-	slotId := int64(20)
+	slotID := int64(20)
 	gomock.InOrder(
-		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(slotId, nil),
-		slotServiceMock.EXPECT().DeleteSlot(ctx, slotId).Return(nil),
+		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(slotID, nil),
+		slotServiceMock.EXPECT().DeleteSlot(ctx, slotID).Return(nil),
 	)
 	req := fasthttp.AcquireRequest()
 	req.SetRequestURI("http://localhost")
@@ -79,8 +81,8 @@ func TestGetSlot(t *testing.T) {
 	resp := fasthttp.AcquireResponse()
 	require.NoError(t, serve(handler.getSlot, req, resp))
 
-	expectedSlotJson, err := json.Marshal(slot)
+	expectedSlotJSON, err := json.Marshal(slot)
 	require.NoError(t, err)
-	require.Equal(t, expectedSlotJson, resp.Body())
+	require.Equal(t, expectedSlotJSON, resp.Body())
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }

@@ -34,15 +34,15 @@ func getMockBannerSlotSocialGroupService(
 func TestIncrementClick(t *testing.T) {
 	handler, bannerSlotSocialGroupServiceMock, requestParser, ctx := getMockBannerSlotSocialGroupService(t)
 	input := core.IncrementClickInput{
-		BannerId:      4,
-		SlotId:        2,
-		SocialGroupId: 1,
+		BannerID:      4,
+		SlotID:        2,
+		SocialGroupID: 1,
 	}
 
 	gomock.InOrder(
-		requestParser.EXPECT().ParseInt64FromBytes(nil).Return(input.BannerId, nil),
-		requestParser.EXPECT().ParseInt64FromBytes(nil).Return(input.SlotId, nil),
-		requestParser.EXPECT().ParseInt64FromBytes(nil).Return(input.SocialGroupId, nil),
+		requestParser.EXPECT().ParseInt64FromBytes(nil).Return(input.BannerID, nil),
+		requestParser.EXPECT().ParseInt64FromBytes(nil).Return(input.SlotID, nil),
+		requestParser.EXPECT().ParseInt64FromBytes(nil).Return(input.SocialGroupID, nil),
 		bannerSlotSocialGroupServiceMock.EXPECT().IncrementClick(ctx, input),
 	)
 	req := fasthttp.AcquireRequest()
@@ -53,29 +53,29 @@ func TestIncrementClick(t *testing.T) {
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }
 
-func TestGetBannerIdToShow(t *testing.T) {
+func TestGetBannerIDToShow(t *testing.T) {
 	handler, bannerSlotSocialGroupServiceMock, requestParser, ctx := getMockBannerSlotSocialGroupService(t)
 	input := core.GetBannerRequest{
-		SlotId:        2,
-		SocialGroupId: 1,
+		SlotID:        2,
+		SocialGroupID: 1,
 	}
 	banner := core.Banner{
 		ID: 21,
 	}
 
 	gomock.InOrder(
-		requestParser.EXPECT().ParseInt64FromBytes(nil).Return(input.SlotId, nil),
-		requestParser.EXPECT().ParseInt64FromBytes(nil).Return(input.SocialGroupId, nil),
-		bannerSlotSocialGroupServiceMock.EXPECT().GetBannerIdToShow(ctx, input).Return(banner.ID, nil),
+		requestParser.EXPECT().ParseInt64FromBytes(nil).Return(input.SlotID, nil),
+		requestParser.EXPECT().ParseInt64FromBytes(nil).Return(input.SocialGroupID, nil),
+		bannerSlotSocialGroupServiceMock.EXPECT().GetBannerIDToShow(ctx, input).Return(banner.ID, nil),
 	)
 	req := fasthttp.AcquireRequest()
 	req.SetRequestURI("http://localhost")
 
 	resp := fasthttp.AcquireResponse()
-	require.NoError(t, serve(handler.getBannerIdToShow, req, resp))
+	require.NoError(t, serve(handler.getBannerIDToShow, req, resp))
 
-	expectedJson, err := json.Marshal(core.GetBannerResponse{ID: banner.ID})
+	expectedJSON, err := json.Marshal(core.GetBannerResponse{ID: banner.ID})
 	require.NoError(t, err)
-	require.Equal(t, expectedJson, resp.Body())
+	require.Equal(t, expectedJSON, resp.Body())
 	require.Equal(t, http.StatusOK, resp.StatusCode())
 }

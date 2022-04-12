@@ -13,31 +13,31 @@ func (h *Handler) initBannerSlotSocialGroupRoutes(r *router.Router) {
 	bannerSlotSocialGroup := r.Group("/")
 	{
 		bannerSlotSocialGroup.POST("increment", h.incrementClick)
-		bannerSlotSocialGroup.GET("getBanner", h.getBannerIdToShow)
+		bannerSlotSocialGroup.GET("getBanner", h.getBannerIDToShow)
 	}
 }
 
 func (h *Handler) incrementClick(ctx *fasthttp.RequestCtx) {
-	bannerId, err := h.getInt64ParamFromRequest(ctx, "banner_id")
+	bannerID, err := h.getInt64ParamFromRequest(ctx, "banner_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	slotId, err := h.getInt64ParamFromRequest(ctx, "slot_id")
+	slotID, err := h.getInt64ParamFromRequest(ctx, "slot_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	socialGroupId, err := h.getInt64ParamFromRequest(ctx, "social_group_id")
+	socialGroupID, err := h.getInt64ParamFromRequest(ctx, "social_group_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
 
 	if err := h.services.BannerSlotSocialGroups.IncrementClick(h.ctx, core.IncrementClickInput{
-		BannerId:      bannerId,
-		SlotId:        slotId,
-		SocialGroupId: socialGroupId,
+		BannerID:      bannerID,
+		SlotID:        slotID,
+		SocialGroupID: socialGroupID,
 	}); err != nil {
 		if errors.Is(core.ErrNotFound, err) {
 			ctx.Error(err.Error(), 404)
@@ -51,21 +51,21 @@ func (h *Handler) incrementClick(ctx *fasthttp.RequestCtx) {
 	ctx.SetStatusCode(http.StatusOK)
 }
 
-func (h *Handler) getBannerIdToShow(ctx *fasthttp.RequestCtx) {
-	slotId, err := h.getInt64ParamFromRequest(ctx, "slot_id")
+func (h *Handler) getBannerIDToShow(ctx *fasthttp.RequestCtx) {
+	slotID, err := h.getInt64ParamFromRequest(ctx, "slot_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
-	socialGroupId, err := h.getInt64ParamFromRequest(ctx, "social_group_id")
+	socialGroupID, err := h.getInt64ParamFromRequest(ctx, "social_group_id")
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
 
-	bannerId, err := h.services.BannerSlotSocialGroups.GetBannerIdToShow(h.ctx, core.GetBannerRequest{
-		SlotId:        slotId,
-		SocialGroupId: socialGroupId,
+	bannerID, err := h.services.BannerSlotSocialGroups.GetBannerIDToShow(h.ctx, core.GetBannerRequest{
+		SlotID:        slotID,
+		SocialGroupID: socialGroupID,
 	})
 	if err != nil {
 		if errors.Is(core.ErrNotFound, err) {
@@ -77,6 +77,6 @@ func (h *Handler) getBannerIdToShow(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	h.setJSONResponse(ctx, core.GetBannerResponse{ID: bannerId})
+	h.setJSONResponse(ctx, core.GetBannerResponse{ID: bannerID})
 	ctx.SetStatusCode(http.StatusOK)
 }

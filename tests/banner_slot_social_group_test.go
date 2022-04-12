@@ -11,19 +11,19 @@ import (
 )
 
 func (s *APITestSuite) TestIncrementClick() {
-	bannerId, err := s.repos.Banners.AddBanner(s.ctx, "myBanner")
+	bannerID, err := s.repos.Banners.AddBanner(s.ctx, "myBanner")
 	r.NoError(err)
-	slotId, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
+	slotID, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
 	r.NoError(err)
-	bannerSlotId, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerId, slotId)
+	bannerSlotID, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerID, slotID)
 	r.NoError(err)
-	socialGroupId, err := s.repos.SocialGroups.AddSocialGroup(s.ctx, "mySocialGroup")
+	socialGroupID, err := s.repos.SocialGroups.AddSocialGroup(s.ctx, "mySocialGroup")
 	r.NoError(err)
 
 	values := url.Values{}
-	values.Add("banner_id", fmt.Sprintf("%v", bannerId))
-	values.Add("slot_id", fmt.Sprintf("%v", slotId))
-	values.Add("social_group_id", fmt.Sprintf("%v", socialGroupId))
+	values.Add("banner_id", fmt.Sprintf("%v", bannerID))
+	values.Add("slot_id", fmt.Sprintf("%v", slotID))
+	values.Add("social_group_id", fmt.Sprintf("%v", socialGroupID))
 
 	resp, err := s.makePostRequest("increment", values)
 	r.NoError(err)
@@ -33,26 +33,26 @@ func (s *APITestSuite) TestIncrementClick() {
 	bannerSlotSocialGroup := core.BannerSlotSocialGroup{}
 	r.NoError(s.db.Get(&bannerSlotSocialGroup, `
 		SELECT * FROM banner_slot_social_groups WHERE banner_slot_id = $1 AND social_group_id = $2
-	`, bannerSlotId, socialGroupId))
+	`, bannerSlotID, socialGroupID))
 
 	r.Equal(bannerSlotSocialGroup.Clicks, 1)
 }
 
-func (s *APITestSuite) TestGetBannerIdToShow() {
-	bannerId, err := s.repos.Banners.AddBanner(s.ctx, "myBanner")
+func (s *APITestSuite) TestGetBannerIDToShow() {
+	bannerID, err := s.repos.Banners.AddBanner(s.ctx, "myBanner")
 	r.NoError(err)
-	slotId, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
+	slotID, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
 	r.NoError(err)
-	bannerSlotId, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerId, slotId)
+	bannerSlotID, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerID, slotID)
 	r.NoError(err)
-	socialGroupId, err := s.repos.SocialGroups.AddSocialGroup(s.ctx, "mySocialGroup")
+	socialGroupID, err := s.repos.SocialGroups.AddSocialGroup(s.ctx, "mySocialGroup")
 	r.NoError(err)
 
 	values := url.Values{}
-	values.Add("slot_id", fmt.Sprintf("%v", slotId))
-	values.Add("social_group_id", fmt.Sprintf("%v", socialGroupId))
+	values.Add("slot_id", fmt.Sprintf("%v", slotID))
+	values.Add("social_group_id", fmt.Sprintf("%v", socialGroupID))
 
-	resp, err := s.makeGetRequest("getBanner", values)
+	resp, err := s.makeGetBannerRequest(values)
 	r.NoError(err)
 	defer resp.Body.Close()
 	r.Equal(http.StatusOK, resp.StatusCode)
@@ -60,11 +60,11 @@ func (s *APITestSuite) TestGetBannerIdToShow() {
 	bannerSlotSocialGroup := core.BannerSlotSocialGroup{}
 	r.NoError(s.db.Get(&bannerSlotSocialGroup, `
 		SELECT * FROM banner_slot_social_groups WHERE banner_slot_id = $1 AND social_group_id = $2
-	`, bannerSlotId, socialGroupId))
+	`, bannerSlotID, socialGroupID))
 
 	r.Equal(bannerSlotSocialGroup.Views, 1)
 
-	expectedResponse := core.GetBannerResponse{ID: bannerId}
+	expectedResponse := core.GetBannerResponse{ID: bannerID}
 	expectedJSON, err := json.Marshal(expectedResponse)
 	r.NoError(err)
 	bodyJSON, err := ioutil.ReadAll(resp.Body)
@@ -72,18 +72,18 @@ func (s *APITestSuite) TestGetBannerIdToShow() {
 	r.Equal(expectedJSON, bodyJSON)
 }
 
-func (s *APITestSuite) TestGetBannerIdToShowWithExistingBannerSlotSocialGroup() {
-	bannerId, err := s.repos.Banners.AddBanner(s.ctx, "myBanner")
+func (s *APITestSuite) TestGetBannerIDToShowWithExistingBannerSlotSocialGroup() {
+	bannerID, err := s.repos.Banners.AddBanner(s.ctx, "myBanner")
 	r.NoError(err)
-	slotId, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
+	slotID, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
 	r.NoError(err)
-	bannerSlotId, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerId, slotId)
+	bannerSlotID, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerID, slotID)
 	r.NoError(err)
-	socialGroupId, err := s.repos.SocialGroups.AddSocialGroup(s.ctx, "mySocialGroup")
+	socialGroupID, err := s.repos.SocialGroups.AddSocialGroup(s.ctx, "mySocialGroup")
 	r.NoError(err)
 	existingBannerSlotSocialGroup := core.BannerSlotSocialGroup{
-		BannerSlotId:  bannerSlotId,
-		SocialGroupId: socialGroupId,
+		BannerSlotID:  bannerSlotID,
+		SocialGroupID: socialGroupID,
 		Views:         30,
 		Clicks:        5,
 	}
@@ -92,18 +92,18 @@ func (s *APITestSuite) TestGetBannerIdToShowWithExistingBannerSlotSocialGroup() 
 		`INSERT INTO banner_slot_social_groups (banner_slot_id, social_group_id, views, clicks) 
 			VALUES ($1, $2, $3, $4) RETURNING id;
 		`,
-		existingBannerSlotSocialGroup.BannerSlotId,
-		existingBannerSlotSocialGroup.SocialGroupId,
+		existingBannerSlotSocialGroup.BannerSlotID,
+		existingBannerSlotSocialGroup.SocialGroupID,
 		existingBannerSlotSocialGroup.Views,
 		existingBannerSlotSocialGroup.Clicks,
 	).Scan(&existingBannerSlotSocialGroup.ID)
 	r.NoError(err)
 
 	values := url.Values{}
-	values.Add("slot_id", fmt.Sprintf("%v", slotId))
-	values.Add("social_group_id", fmt.Sprintf("%v", socialGroupId))
+	values.Add("slot_id", fmt.Sprintf("%v", slotID))
+	values.Add("social_group_id", fmt.Sprintf("%v", socialGroupID))
 
-	resp, err := s.makeGetRequest("getBanner", values)
+	resp, err := s.makeGetBannerRequest(values)
 	r.NoError(err)
 	defer resp.Body.Close()
 	r.Equal(http.StatusOK, resp.StatusCode)
@@ -113,35 +113,35 @@ func (s *APITestSuite) TestGetBannerIdToShowWithExistingBannerSlotSocialGroup() 
 		SELECT * FROM banner_slot_social_groups WHERE id = $1
 	`, existingBannerSlotSocialGroup.ID))
 
-	r.Equal(bannerSlotSocialGroup.BannerSlotId, existingBannerSlotSocialGroup.BannerSlotId)
-	r.Equal(bannerSlotSocialGroup.SocialGroupId, existingBannerSlotSocialGroup.SocialGroupId)
+	r.Equal(bannerSlotSocialGroup.BannerSlotID, existingBannerSlotSocialGroup.BannerSlotID)
+	r.Equal(bannerSlotSocialGroup.SocialGroupID, existingBannerSlotSocialGroup.SocialGroupID)
 	r.Equal(bannerSlotSocialGroup.Views, existingBannerSlotSocialGroup.Views+1)
 	r.Equal(bannerSlotSocialGroup.Clicks, existingBannerSlotSocialGroup.Clicks)
 }
 
-func (s *APITestSuite) TestGetBannerIdToShowMultihandBanditIsWorking() {
-	slotId, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
+func (s *APITestSuite) TestGetBannerIDToShowMultihandBanditIsWorking() {
+	slotID, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
 	r.NoError(err)
-	bannerId1, err := s.repos.Banners.AddBanner(s.ctx, "myBanner1")
+	bannerID1, err := s.repos.Banners.AddBanner(s.ctx, "myBanner1")
 	r.NoError(err)
-	bannerId2, err := s.repos.Banners.AddBanner(s.ctx, "myBanner2")
+	bannerID2, err := s.repos.Banners.AddBanner(s.ctx, "myBanner2")
 	r.NoError(err)
-	bannerSlotId1, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerId1, slotId)
+	bannerSlotID1, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerID1, slotID)
 	r.NoError(err)
-	bannerSlotId2, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerId2, slotId)
+	bannerSlotID2, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerID2, slotID)
 	r.NoError(err)
-	socialGroupId, err := s.repos.SocialGroups.AddSocialGroup(s.ctx, "mySocialGroup")
+	socialGroupID, err := s.repos.SocialGroups.AddSocialGroup(s.ctx, "mySocialGroup")
 	r.NoError(err)
 	bannerSlotSocialGroup1 := core.BannerSlotSocialGroup{
-		BannerSlotId:  bannerSlotId1,
-		SocialGroupId: socialGroupId,
+		BannerSlotID:  bannerSlotID1,
+		SocialGroupID: socialGroupID,
 		Views:         1000000,
 		Clicks:        0,
 	}
 	r.NoError(s.insertBannerSlotSocialGroup(&bannerSlotSocialGroup1))
 	bannerSlotSocialGroup2 := core.BannerSlotSocialGroup{
-		BannerSlotId:  bannerSlotId2,
-		SocialGroupId: socialGroupId,
+		BannerSlotID:  bannerSlotID2,
+		SocialGroupID: socialGroupID,
 		Views:         5,
 		Clicks:        5,
 	}
@@ -150,11 +150,11 @@ func (s *APITestSuite) TestGetBannerIdToShowMultihandBanditIsWorking() {
 	bannerShowStatistic := map[int64]int{}
 
 	values := url.Values{}
-	values.Add("slot_id", fmt.Sprintf("%v", slotId))
-	values.Add("social_group_id", fmt.Sprintf("%v", socialGroupId))
+	values.Add("slot_id", fmt.Sprintf("%v", slotID))
+	values.Add("social_group_id", fmt.Sprintf("%v", socialGroupID))
 
 	for i := 0; i < 1000; i++ {
-		resp, err := s.makeGetRequest("getBanner", values)
+		resp, err := s.makeGetBannerRequest(values)
 		r.NoError(err)
 		defer resp.Body.Close()
 
@@ -166,55 +166,55 @@ func (s *APITestSuite) TestGetBannerIdToShowMultihandBanditIsWorking() {
 		bannerShowStatistic[response.ID]++
 	}
 
-	r.True(bannerShowStatistic[bannerId1] < 150 && bannerShowStatistic[bannerId1] > 50)
-	r.True(bannerShowStatistic[bannerId2] < 950 && bannerShowStatistic[bannerId2] > 850)
+	r.True(bannerShowStatistic[bannerID1] < 150 && bannerShowStatistic[bannerID1] > 50)
+	r.True(bannerShowStatistic[bannerID2] < 950 && bannerShowStatistic[bannerID2] > 850)
 }
 
-func (s *APITestSuite) TestGetBannerIdToShowEveryBannerWasShowed() {
-	slotId, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
+func (s *APITestSuite) TestGetBannerIDToShowEveryBannerWasShowed() {
+	slotID, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
 	r.NoError(err)
-	bannerId1, err := s.repos.Banners.AddBanner(s.ctx, "myBanner1")
+	bannerID1, err := s.repos.Banners.AddBanner(s.ctx, "myBanner1")
 	r.NoError(err)
-	bannerId2, err := s.repos.Banners.AddBanner(s.ctx, "myBanner2")
+	bannerID2, err := s.repos.Banners.AddBanner(s.ctx, "myBanner2")
 	r.NoError(err)
-	bannerId3, err := s.repos.Banners.AddBanner(s.ctx, "myBanner3")
+	bannerID3, err := s.repos.Banners.AddBanner(s.ctx, "myBanner3")
 	r.NoError(err)
-	bannerId4, err := s.repos.Banners.AddBanner(s.ctx, "myBanner4")
+	bannerID4, err := s.repos.Banners.AddBanner(s.ctx, "myBanner4")
 	r.NoError(err)
-	bannerSlotId1, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerId1, slotId)
+	bannerSlotID1, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerID1, slotID)
 	r.NoError(err)
-	bannerSlotId2, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerId2, slotId)
+	bannerSlotID2, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerID2, slotID)
 	r.NoError(err)
-	bannerSlotId3, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerId3, slotId)
+	bannerSlotID3, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerID3, slotID)
 	r.NoError(err)
-	bannerSlotId4, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerId4, slotId)
+	bannerSlotID4, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerID4, slotID)
 	r.NoError(err)
-	socialGroupId, err := s.repos.SocialGroups.AddSocialGroup(s.ctx, "mySocialGroup")
+	socialGroupID, err := s.repos.SocialGroups.AddSocialGroup(s.ctx, "mySocialGroup")
 	r.NoError(err)
 	bannerSlotSocialGroup1 := core.BannerSlotSocialGroup{
-		BannerSlotId:  bannerSlotId1,
-		SocialGroupId: socialGroupId,
+		BannerSlotID:  bannerSlotID1,
+		SocialGroupID: socialGroupID,
 		Views:         1000000,
 		Clicks:        0,
 	}
 	r.NoError(s.insertBannerSlotSocialGroup(&bannerSlotSocialGroup1))
 	bannerSlotSocialGroup2 := core.BannerSlotSocialGroup{
-		BannerSlotId:  bannerSlotId2,
-		SocialGroupId: socialGroupId,
+		BannerSlotID:  bannerSlotID2,
+		SocialGroupID: socialGroupID,
 		Views:         1000000,
 		Clicks:        0,
 	}
 	r.NoError(s.insertBannerSlotSocialGroup(&bannerSlotSocialGroup2))
 	bannerSlotSocialGroup3 := core.BannerSlotSocialGroup{
-		BannerSlotId:  bannerSlotId3,
-		SocialGroupId: socialGroupId,
+		BannerSlotID:  bannerSlotID3,
+		SocialGroupID: socialGroupID,
 		Views:         1000000,
 		Clicks:        0,
 	}
 	r.NoError(s.insertBannerSlotSocialGroup(&bannerSlotSocialGroup3))
 	bannerSlotSocialGroup4 := core.BannerSlotSocialGroup{
-		BannerSlotId:  bannerSlotId4,
-		SocialGroupId: socialGroupId,
+		BannerSlotID:  bannerSlotID4,
+		SocialGroupID: socialGroupID,
 		Views:         5,
 		Clicks:        5,
 	}
@@ -223,11 +223,11 @@ func (s *APITestSuite) TestGetBannerIdToShowEveryBannerWasShowed() {
 	bannerShowStatistic := map[int64]int{}
 
 	values := url.Values{}
-	values.Add("slot_id", fmt.Sprintf("%v", slotId))
-	values.Add("social_group_id", fmt.Sprintf("%v", socialGroupId))
+	values.Add("slot_id", fmt.Sprintf("%v", slotID))
+	values.Add("social_group_id", fmt.Sprintf("%v", socialGroupID))
 
 	for i := 0; i < 1000; i++ {
-		resp, err := s.makeGetRequest("getBanner", values)
+		resp, err := s.makeGetBannerRequest(values)
 		r.NoError(err)
 		defer resp.Body.Close()
 
@@ -239,24 +239,27 @@ func (s *APITestSuite) TestGetBannerIdToShowEveryBannerWasShowed() {
 		bannerShowStatistic[response.ID]++
 	}
 
-	r.True(bannerShowStatistic[bannerId1] > 0)
-	r.True(bannerShowStatistic[bannerId2] > 0)
-	r.True(bannerShowStatistic[bannerId3] > 0)
-	r.True(bannerShowStatistic[bannerId4] > bannerShowStatistic[bannerId1]+bannerShowStatistic[bannerId2]+bannerShowStatistic[bannerId3])
+	r.True(bannerShowStatistic[bannerID1] > 0)
+	r.True(bannerShowStatistic[bannerID2] > 0)
+	r.True(bannerShowStatistic[bannerID3] > 0)
+	r.True(
+		bannerShowStatistic[bannerID4] >
+			bannerShowStatistic[bannerID1]+bannerShowStatistic[bannerID2]+bannerShowStatistic[bannerID3],
+	)
 }
 
 func (s *APITestSuite) insertBannerSlotSocialGroup(
 	bannerSlotSocialGroup *core.BannerSlotSocialGroup,
 ) error {
-	s.T().Helper() //nolint
+	s.T().Helper()
 
 	return s.db.QueryRowxContext(
 		s.ctx,
 		`INSERT INTO banner_slot_social_groups (banner_slot_id, social_group_id, views, clicks) 
 			VALUES ($1, $2, $3, $4) RETURNING id;
 		`,
-		bannerSlotSocialGroup.BannerSlotId,
-		bannerSlotSocialGroup.SocialGroupId,
+		bannerSlotSocialGroup.BannerSlotID,
+		bannerSlotSocialGroup.SocialGroupID,
 		bannerSlotSocialGroup.Views,
 		bannerSlotSocialGroup.Clicks,
 	).Scan(&bannerSlotSocialGroup.ID)

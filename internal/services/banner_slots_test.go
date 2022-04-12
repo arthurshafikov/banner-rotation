@@ -22,20 +22,20 @@ func TestAssociateBannerToSlot(t *testing.T) {
 	ctx, bannerSlotRepo := getBannerSlotRepoMock(t)
 	expectedBannerSlot := core.BannerSlot{
 		ID:       7,
-		BannerId: 1,
-		SlotId:   2,
+		BannerID: 1,
+		SlotID:   2,
 	}
 	gomock.InOrder(
 		bannerSlotRepo.EXPECT().
-			AddBannerSlot(ctx, expectedBannerSlot.BannerId, expectedBannerSlot.SlotId).
+			AddBannerSlot(ctx, expectedBannerSlot.BannerID, expectedBannerSlot.SlotID).
 			Return(expectedBannerSlot.ID, nil),
 	)
 	bs := NewBannerSlotService(bannerSlotRepo)
 
-	bannerSlotId, err := bs.AssociateBannerToSlot(ctx, expectedBannerSlot.BannerId, expectedBannerSlot.SlotId)
+	bannerSlotID, err := bs.AssociateBannerToSlot(ctx, expectedBannerSlot.BannerID, expectedBannerSlot.SlotID)
 
 	require.NoError(t, err)
-	require.Equal(t, expectedBannerSlot.ID, bannerSlotId)
+	require.Equal(t, expectedBannerSlot.ID, bannerSlotID)
 }
 
 func TestDissociateBannerFromSlot(t *testing.T) {
@@ -50,43 +50,43 @@ func TestDissociateBannerFromSlot(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestGetByBannerAndSlotIds(t *testing.T) {
+func TestGetByBannerAndSlotIDs(t *testing.T) {
 	ctx, bannerSlotRepo := getBannerSlotRepoMock(t)
 	expected := &core.BannerSlot{
 		ID:       5,
-		BannerId: 1,
-		SlotId:   2,
+		BannerID: 1,
+		SlotID:   2,
 	}
 	gomock.InOrder(
-		bannerSlotRepo.EXPECT().GetByBannerAndSlotIds(ctx, expected.BannerId, expected.SlotId).
+		bannerSlotRepo.EXPECT().GetByBannerAndSlotIDs(ctx, expected.BannerID, expected.SlotID).
 			Return(expected, nil),
 	)
 	bs := NewBannerSlotService(bannerSlotRepo)
 
-	result, err := bs.GetByBannerAndSlotIds(ctx, 1, 2)
+	result, err := bs.GetByBannerAndSlotIDs(ctx, 1, 2)
 
 	require.Equal(t, expected, result)
 	require.NoError(t, err)
 }
 
-func TestGetRandomBannerIdExceptExcluded(t *testing.T) {
+func TestGetRandomBannerIDExceptExcluded(t *testing.T) {
 	ctx, bannerSlotRepo := getBannerSlotRepoMock(t)
 	expected := &core.BannerSlot{
 		ID:       5,
-		BannerId: 1,
-		SlotId:   3,
+		BannerID: 1,
+		SlotID:   3,
 	}
 	excludedBanner := core.Banner{
 		ID: 56,
 	}
 	gomock.InOrder(
 		bannerSlotRepo.EXPECT().
-			GetRandomBannerIdExceptExcluded(ctx, expected.SlotId, excludedBanner.ID).
+			GetRandomBannerIDExceptExcluded(ctx, expected.SlotID, excludedBanner.ID).
 			Return(expected.ID, nil),
 	)
 	bs := NewBannerSlotService(bannerSlotRepo)
 
-	result, err := bs.GetRandomBannerIdExceptExcluded(ctx, 3, 56)
+	result, err := bs.GetRandomBannerIDExceptExcluded(ctx, 3, 56)
 
 	require.Equal(t, expected.ID, result)
 	require.NoError(t, err)

@@ -10,12 +10,12 @@ import (
 )
 
 func (s *APITestSuite) TestAssociateBannerToSlot() {
-	bannerId, err := s.repos.Banners.AddBanner(s.ctx, "myBanner")
+	bannerID, err := s.repos.Banners.AddBanner(s.ctx, "myBanner")
 	r.NoError(err)
-	slotId, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
+	slotID, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
 	r.NoError(err)
 
-	resp, err := s.makePostRequest(fmt.Sprintf("/banner/%v/slot/%v", bannerId, slotId), url.Values{})
+	resp, err := s.makePostRequest(fmt.Sprintf("/banner/%v/slot/%v", bannerID, slotID), url.Values{})
 	r.NoError(err)
 	defer resp.Body.Close()
 	r.Equal(http.StatusCreated, resp.StatusCode)
@@ -23,27 +23,27 @@ func (s *APITestSuite) TestAssociateBannerToSlot() {
 	bannerSlot := core.BannerSlot{}
 	r.NoError(s.db.Get(&bannerSlot, `
 		SELECT * FROM banner_slots WHERE banner_id = $1 AND slot_id = $2
-	`, bannerId, slotId))
+	`, bannerID, slotID))
 
-	r.Equal(bannerSlot.BannerId, bannerId)
-	r.Equal(bannerSlot.SlotId, slotId)
+	r.Equal(bannerSlot.BannerID, bannerID)
+	r.Equal(bannerSlot.SlotID, slotID)
 }
 
 func (s *APITestSuite) TestDissociateBannerFromSlot() {
-	bannerId, err := s.repos.Banners.AddBanner(s.ctx, "myBanner")
+	bannerID, err := s.repos.Banners.AddBanner(s.ctx, "myBanner")
 	r.NoError(err)
-	slotId, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
+	slotID, err := s.repos.Slots.AddSlot(s.ctx, "mySlot")
 	r.NoError(err)
-	bannerSlotId, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerId, slotId)
+	bannerSlotID, err := s.repos.BannerSlots.AddBannerSlot(s.ctx, bannerID, slotID)
 	r.NoError(err)
 
-	resp, err := s.makeDeleteRequest(fmt.Sprintf("/banner/%v/slot/%v", bannerId, slotId), url.Values{})
+	resp, err := s.makeDeleteRequest(fmt.Sprintf("/banner/%v/slot/%v", bannerID, slotID), url.Values{})
 	r.NoError(err)
 	defer resp.Body.Close()
 	r.Equal(http.StatusOK, resp.StatusCode)
 
 	bannerSlot := core.BannerSlot{}
-	err = s.db.Get(&bannerSlot, `SELECT * FROM banner_slots WHERE id = $1`, bannerSlotId)
+	err = s.db.Get(&bannerSlot, `SELECT * FROM banner_slots WHERE id = $1`, bannerSlotID)
 	r.ErrorIs(sql.ErrNoRows, err)
-	r.NotEqual(bannerSlotId, bannerSlot.ID)
+	r.NotEqual(bannerSlotID, bannerSlot.ID)
 }

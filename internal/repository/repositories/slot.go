@@ -23,11 +23,11 @@ func NewSlots(db *sqlx.DB) *Slots {
 }
 
 func (b *Slots) AddSlot(ctx context.Context, description string) (int64, error) {
-	var slotId int64
+	var slotID int64
 	query := fmt.Sprintf("INSERT INTO %s (description) VALUES ($1) RETURNING id;", b.table)
-	err := b.db.QueryRowxContext(ctx, query, description).Scan(&slotId)
+	err := b.db.QueryRowxContext(ctx, query, description).Scan(&slotID)
 
-	return slotId, err
+	return slotID, err
 }
 
 func (b *Slots) DeleteSlot(ctx context.Context, id int64) error {

@@ -28,10 +28,10 @@ func TestAddSocialGroup(t *testing.T) {
 	)
 	sg := NewSocialGroupService(socialGroupRepo)
 
-	socialGroupId, err := sg.AddSocialGroup(ctx, "test_description")
+	socialGroupID, err := sg.AddSocialGroup(ctx, "test_description")
 
 	require.NoError(t, err)
-	require.Equal(t, expectedSocialGroup.ID, socialGroupId)
+	require.Equal(t, expectedSocialGroup.ID, socialGroupID)
 }
 
 func TestDeleteSocialGroup(t *testing.T) {

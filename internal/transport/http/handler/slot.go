@@ -13,10 +13,10 @@ func (h *Handler) initSlotRoutes(r *router.Router) {
 	slots := r.Group("/slot")
 	{
 		slots.POST("/add", h.addSlot)
-		slotsId := slots.Group("/{id:[0-9]+}")
+		slotsID := slots.Group("/{id:[0-9]+}")
 		{
-			slotsId.GET("", h.getSlot)
-			slotsId.DELETE("/delete", h.deleteSlot)
+			slotsID.GET("", h.getSlot)
+			slotsID.DELETE("/delete", h.deleteSlot)
 		}
 	}
 }
@@ -35,7 +35,7 @@ func (h *Handler) addSlot(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) deleteSlot(ctx *fasthttp.RequestCtx) {
-	id, err := h.getIdFromRequest(ctx)
+	id, err := h.getIDFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -49,7 +49,7 @@ func (h *Handler) deleteSlot(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) getSlot(ctx *fasthttp.RequestCtx) {
-	id, err := h.getIdFromRequest(ctx)
+	id, err := h.getIDFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return

@@ -17,10 +17,10 @@ func TestAddSocialGroup(t *testing.T) {
 		WithArgs("test_description").
 		WillReturnRows(sqlmock.NewRows([]string{"id"}).FromCSVString("2"))
 
-	socialGroupId, err := socialGroupRepo.AddSocialGroup(ctx, "test_description")
+	socialGroupID, err := socialGroupRepo.AddSocialGroup(ctx, "test_description")
 	require.NoError(t, err)
 	require.NoError(t, mock.ExpectationsWereMet())
-	require.Equal(t, int64(2), socialGroupId)
+	require.Equal(t, int64(2), socialGroupID)
 }
 
 func TestDeleteSocialGroup(t *testing.T) {

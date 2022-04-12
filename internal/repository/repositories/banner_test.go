@@ -28,10 +28,10 @@ func TestAddBanner(t *testing.T) {
 		WithArgs("test_description").
 		WillReturnRows(sqlmock.NewRows([]string{"id"}).FromCSVString("2"))
 
-	bannerId, err := bannerRepo.AddBanner(ctx, "test_description")
+	bannerID, err := bannerRepo.AddBanner(ctx, "test_description")
 	require.NoError(t, err)
 	require.NoError(t, mock.ExpectationsWereMet())
-	require.Equal(t, int64(2), bannerId)
+	require.Equal(t, int64(2), bannerID)
 }
 
 func TestDeleteBanner(t *testing.T) {

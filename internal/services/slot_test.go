@@ -28,10 +28,10 @@ func TestAddSlot(t *testing.T) {
 	)
 	s := NewSlotService(slotRepo)
 
-	slotId, err := s.AddSlot(ctx, "test_description")
+	slotID, err := s.AddSlot(ctx, "test_description")
 
 	require.NoError(t, err)
-	require.Equal(t, expectedSlot.ID, slotId)
+	require.Equal(t, expectedSlot.ID, slotID)
 }
 
 func TestDeleteSlot(t *testing.T) {

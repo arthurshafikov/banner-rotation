@@ -15,6 +15,10 @@ type BannerSlots struct {
 	table string
 }
 
+type bannerIDResponse struct {
+	BannerID int64 `db:"banner_id"`
+}
+
 func NewBannerSlots(db *sqlx.DB) *BannerSlots {
 	return &BannerSlots{
 		db:    db,
@@ -22,17 +26,17 @@ func NewBannerSlots(db *sqlx.DB) *BannerSlots {
 	}
 }
 
-func (bs *BannerSlots) AddBannerSlot(ctx context.Context, bannerId, slotId int64) (int64, error) {
-	var bannerSlotId int64
+func (bs *BannerSlots) AddBannerSlot(ctx context.Context, bannerID, slotID int64) (int64, error) {
+	var bannerSlotID int64
 	query := fmt.Sprintf("INSERT INTO %s (banner_id, slot_id) VALUES ($1, $2) RETURNING id;", bs.table)
-	err := bs.db.QueryRowxContext(ctx, query, bannerId, slotId).Scan(&bannerSlotId)
+	err := bs.db.QueryRowxContext(ctx, query, bannerID, slotID).Scan(&bannerSlotID)
 
-	return bannerSlotId, err
+	return bannerSlotID, err
 }
 
-func (bs *BannerSlots) DeleteBannerSlot(ctx context.Context, bannerId, slotId int64) error {
+func (bs *BannerSlots) DeleteBannerSlot(ctx context.Context, bannerID, slotID int64) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE banner_id=$1 AND slot_id=$2", bs.table)
-	if err := bs.db.QueryRowContext(ctx, query, bannerId, slotId).Scan(); err != nil {
+	if err := bs.db.QueryRowContext(ctx, query, bannerID, slotID).Scan(); err != nil {
 		if !errors.Is(sql.ErrNoRows, err) {
 			return err
 		}
@@ -41,11 +45,11 @@ func (bs *BannerSlots) DeleteBannerSlot(ctx context.Context, bannerId, slotId in
 	return nil
 }
 
-func (bs *BannerSlots) GetByBannerAndSlotIds(ctx context.Context, bannerId, slotId int64) (*core.BannerSlot, error) {
+func (bs *BannerSlots) GetByBannerAndSlotIDs(ctx context.Context, bannerID, slotID int64) (*core.BannerSlot, error) {
 	bannerSlot := core.BannerSlot{}
 
 	query := fmt.Sprintf("SELECT * FROM %s WHERE banner_id=$1 AND slot_id=$2", bs.table)
-	if err := bs.db.GetContext(ctx, &bannerSlot, query, bannerId, slotId); err != nil {
+	if err := bs.db.GetContext(ctx, &bannerSlot, query, bannerID, slotID); err != nil {
 		if errors.Is(sql.ErrNoRows, err) {
 			return nil, core.ErrNotFound
 		}
@@ -55,14 +59,12 @@ func (bs *BannerSlots) GetByBannerAndSlotIds(ctx context.Context, bannerId, slot
 	return &bannerSlot, nil
 }
 
-func (bs *BannerSlots) GetRandomBannerIdExceptExcluded(
+func (bs *BannerSlots) GetRandomBannerIDExceptExcluded(
 	ctx context.Context,
-	slotId,
-	excludedBannerId int64,
+	slotID,
+	excludedBannerID int64,
 ) (int64, error) {
-	var result = struct {
-		BannerId int64 `db:"banner_id"`
-	}{}
+	result := bannerIDResponse{}
 	query := fmt.Sprintf(
 		`SELECT banner_id FROM %s
 			WHERE slot_id = $1 AND banner_id != $2
@@ -70,9 +72,9 @@ func (bs *BannerSlots) GetRandomBannerIdExceptExcluded(
 			LIMIT 1;`,
 		bs.table,
 	)
-	if err := bs.db.GetContext(ctx, &result, query, slotId, excludedBannerId); err != nil {
+	if err := bs.db.GetContext(ctx, &result, query, slotID, excludedBannerID); err != nil {
 		return 0, err
 	}
 
-	return result.BannerId, nil
+	return result.BannerID, nil
 }

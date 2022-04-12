@@ -41,13 +41,13 @@ func TestIncrementClick(t *testing.T) {
 	queueMock := getQueueMock(t)
 	bannerSlot := core.BannerSlot{
 		ID:       23,
-		BannerId: 3,
-		SlotId:   1,
+		BannerID: 3,
+		SlotID:   1,
 	}
 	input := core.IncrementClickInput{
-		BannerId:      bannerSlot.BannerId,
-		SlotId:        bannerSlot.SlotId,
-		SocialGroupId: 6,
+		BannerID:      bannerSlot.BannerID,
+		SlotID:        bannerSlot.SlotID,
+		SocialGroupID: 6,
 	}
 
 	timeNow := time.Date(2022, time.March, 10, 23, 0, 0, 0, time.UTC)
@@ -55,12 +55,12 @@ func TestIncrementClick(t *testing.T) {
 	defer f.Undo()
 	f.Do()
 	gomock.InOrder(
-		bannerSlotService.EXPECT().GetByBannerAndSlotIds(ctx, input.BannerId, input.SlotId).Return(&bannerSlot, nil),
-		bannerSlotSocialGroupRepo.EXPECT().IncrementClick(ctx, bannerSlot.ID, input.SocialGroupId).Return(nil),
+		bannerSlotService.EXPECT().GetByBannerAndSlotIDs(ctx, input.BannerID, input.SlotID).Return(&bannerSlot, nil),
+		bannerSlotSocialGroupRepo.EXPECT().IncrementClick(ctx, bannerSlot.ID, input.SocialGroupID).Return(nil),
 		queueMock.EXPECT().AddToQueue("clicks", core.IncrementEvent{
-			BannerId:      bannerSlot.BannerId,
-			SlotId:        bannerSlot.SlotId,
-			SocialGroupId: input.SocialGroupId,
+			BannerID:      bannerSlot.BannerID,
+			SlotID:        bannerSlot.SlotID,
+			SocialGroupID: input.SocialGroupID,
 			Datetime:      timeNow,
 		}).Return(nil),
 	)
@@ -71,24 +71,24 @@ func TestIncrementClick(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestGetBannerIdToShow(t *testing.T) {
+func TestGetBannerIDToShow(t *testing.T) {
 	ctx, bannerSlotSocialGroupRepo := getBannerSlotSocialGroupRepoMock(t)
 	bannerSlotService := getBannerSlotServiceMock(t)
 	queueMock := getQueueMock(t)
-	slotId := int64(1)
+	slotID := int64(1)
 	mostProfitableBannerSlot := core.BannerSlot{
 		ID:       23,
-		BannerId: 3,
-		SlotId:   slotId,
+		BannerID: 3,
+		SlotID:   slotID,
 	}
 	randomBannerSlot := core.BannerSlot{
 		ID:       44,
-		BannerId: 5,
-		SlotId:   slotId,
+		BannerID: 5,
+		SlotID:   slotID,
 	}
 	input := core.GetBannerRequest{
-		SlotId:        slotId,
-		SocialGroupId: 6,
+		SlotID:        slotID,
+		SocialGroupID: 6,
 	}
 
 	timeNow := time.Date(2022, time.March, 10, 23, 0, 0, 0, time.UTC)
@@ -96,25 +96,25 @@ func TestGetBannerIdToShow(t *testing.T) {
 	defer f.Undo()
 	f.Do()
 	gomock.InOrder(
-		bannerSlotSocialGroupRepo.EXPECT().GetTheMostProfitableBannerId(ctx, input.SlotId, input.SocialGroupId).
-			Return(mostProfitableBannerSlot.BannerId, nil),
-		bannerSlotService.EXPECT().GetRandomBannerIdExceptExcluded(ctx, input.SlotId, mostProfitableBannerSlot.BannerId).
-			Return(randomBannerSlot.BannerId, nil),
-		bannerSlotService.EXPECT().GetByBannerAndSlotIds(ctx, randomBannerSlot.BannerId, randomBannerSlot.SlotId).
+		bannerSlotSocialGroupRepo.EXPECT().GetTheMostProfitableBannerID(ctx, input.SlotID, input.SocialGroupID).
+			Return(mostProfitableBannerSlot.BannerID, nil),
+		bannerSlotService.EXPECT().GetRandomBannerIDExceptExcluded(ctx, input.SlotID, mostProfitableBannerSlot.BannerID).
+			Return(randomBannerSlot.BannerID, nil),
+		bannerSlotService.EXPECT().GetByBannerAndSlotIDs(ctx, randomBannerSlot.BannerID, randomBannerSlot.SlotID).
 			Return(&randomBannerSlot, nil),
-		bannerSlotSocialGroupRepo.EXPECT().IncrementView(ctx, randomBannerSlot.ID, input.SocialGroupId).
+		bannerSlotSocialGroupRepo.EXPECT().IncrementView(ctx, randomBannerSlot.ID, input.SocialGroupID).
 			Return(nil),
 		queueMock.EXPECT().AddToQueue("views", core.IncrementEvent{
-			BannerId:      randomBannerSlot.BannerId,
-			SlotId:        randomBannerSlot.SlotId,
-			SocialGroupId: input.SocialGroupId,
+			BannerID:      randomBannerSlot.BannerID,
+			SlotID:        randomBannerSlot.SlotID,
+			SocialGroupID: input.SocialGroupID,
 			Datetime:      timeNow,
 		}).Return(nil),
 	)
 	bssg := NewBannerSlotSocialGroupService(bannerSlotSocialGroupRepo, bannerSlotService, 1, queueMock)
 
-	result, err := bssg.GetBannerIdToShow(ctx, input)
+	result, err := bssg.GetBannerIDToShow(ctx, input)
 
-	require.Equal(t, randomBannerSlot.BannerId, result)
+	require.Equal(t, randomBannerSlot.BannerID, result)
 	require.NoError(t, err)
 }

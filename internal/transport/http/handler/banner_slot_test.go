@@ -14,7 +14,9 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-func getMockBannerSlotService(t *testing.T) (*Handler, *mock_services.MockBannerSlots, *mock_handler.MockRequestParser, context.Context) {
+func getMockBannerSlotService(
+	t *testing.T,
+) (*Handler, *mock_services.MockBannerSlots, *mock_handler.MockRequestParser, context.Context) {
 	t.Helper()
 
 	ctx := context.Background()
@@ -31,13 +33,13 @@ func getMockBannerSlotService(t *testing.T) (*Handler, *mock_services.MockBanner
 func TestAssociateBannerToSlot(t *testing.T) {
 	handler, bannerSlotServiceMock, requestParser, ctx := getMockBannerSlotService(t)
 	bannerSlot := core.BannerSlot{
-		BannerId: 4,
-		SlotId:   8,
+		BannerID: 4,
+		SlotID:   8,
 	}
 	gomock.InOrder(
-		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(bannerSlot.BannerId, nil),
-		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(bannerSlot.SlotId, nil),
-		bannerSlotServiceMock.EXPECT().AssociateBannerToSlot(ctx, bannerSlot.BannerId, bannerSlot.SlotId),
+		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(bannerSlot.BannerID, nil),
+		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(bannerSlot.SlotID, nil),
+		bannerSlotServiceMock.EXPECT().AssociateBannerToSlot(ctx, bannerSlot.BannerID, bannerSlot.SlotID),
 	)
 	req := fasthttp.AcquireRequest()
 	req.SetRequestURI("http://localhost")
@@ -50,13 +52,13 @@ func TestAssociateBannerToSlot(t *testing.T) {
 func TestDissociateBannerFromSlot(t *testing.T) {
 	handler, bannerSlotServiceMock, requestParser, ctx := getMockBannerSlotService(t)
 	bannerSlot := core.BannerSlot{
-		BannerId: 4,
-		SlotId:   8,
+		BannerID: 4,
+		SlotID:   8,
 	}
 	gomock.InOrder(
-		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(bannerSlot.BannerId, nil),
-		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(bannerSlot.SlotId, nil),
-		bannerSlotServiceMock.EXPECT().DissociateBannerFromSlot(ctx, bannerSlot.BannerId, bannerSlot.SlotId),
+		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(bannerSlot.BannerID, nil),
+		requestParser.EXPECT().ParseInt64FromInterface(nil).Return(bannerSlot.SlotID, nil),
+		bannerSlotServiceMock.EXPECT().DissociateBannerFromSlot(ctx, bannerSlot.BannerID, bannerSlot.SlotID),
 	)
 	req := fasthttp.AcquireRequest()
 	req.SetRequestURI("http://localhost")

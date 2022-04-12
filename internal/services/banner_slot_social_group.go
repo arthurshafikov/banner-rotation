@@ -32,59 +32,59 @@ func NewBannerSlotSocialGroupService(
 }
 
 func (bssg *BannerSlotSocialGroupService) IncrementClick(ctx context.Context, inp core.IncrementClickInput) error {
-	bannerSlot, err := bssg.bannerSlotService.GetByBannerAndSlotIds(ctx, inp.BannerId, inp.SlotId)
+	bannerSlot, err := bssg.bannerSlotService.GetByBannerAndSlotIDs(ctx, inp.BannerID, inp.SlotID)
 	if err != nil {
 		return err
 	}
 
-	if err := bssg.repo.IncrementClick(ctx, bannerSlot.ID, inp.SocialGroupId); err != nil {
-		return nil
+	if err := bssg.repo.IncrementClick(ctx, bannerSlot.ID, inp.SocialGroupID); err != nil {
+		return err
 	}
 
 	return bssg.queue.AddToQueue("clicks", core.IncrementEvent{
-		BannerId:      inp.BannerId,
-		SlotId:        inp.SlotId,
-		SocialGroupId: inp.SocialGroupId,
+		BannerID:      inp.BannerID,
+		SlotID:        inp.SlotID,
+		SocialGroupID: inp.SocialGroupID,
 		Datetime:      time.Now(),
 	})
 }
 
-func (bssg *BannerSlotSocialGroupService) GetBannerIdToShow(
+func (bssg *BannerSlotSocialGroupService) GetBannerIDToShow(
 	ctx context.Context,
 	inp core.GetBannerRequest,
 ) (int64, error) {
-	bannerId, err := bssg.repo.GetTheMostProfitableBannerId(ctx, inp.SlotId, inp.SocialGroupId)
+	bannerID, err := bssg.repo.GetTheMostProfitableBannerID(ctx, inp.SlotID, inp.SocialGroupID)
 	if err != nil {
 		return 0, err
 	}
 
-	if bannerId == 0 || bssg.rollADice(bssg.eGreedValue) {
-		bannerId, err = bssg.bannerSlotService.GetRandomBannerIdExceptExcluded(ctx, inp.SlotId, bannerId)
+	if bannerID == 0 || bssg.rollADice(bssg.eGreedValue) {
+		bannerID, err = bssg.bannerSlotService.GetRandomBannerIDExceptExcluded(ctx, inp.SlotID, bannerID)
 		if err != nil {
 			return 0, err
 		}
 	}
 
-	bannerSlot, err := bssg.bannerSlotService.GetByBannerAndSlotIds(ctx, bannerId, inp.SlotId)
+	bannerSlot, err := bssg.bannerSlotService.GetByBannerAndSlotIDs(ctx, bannerID, inp.SlotID)
 	if err != nil {
 		return 0, err
 	}
-	if err := bssg.repo.IncrementView(ctx, bannerSlot.ID, inp.SocialGroupId); err != nil {
+	if err := bssg.repo.IncrementView(ctx, bannerSlot.ID, inp.SocialGroupID); err != nil {
 		return 0, err
 	}
 
 	if err := bssg.queue.AddToQueue("views", core.IncrementEvent{
-		BannerId:      bannerId,
-		SlotId:        inp.SlotId,
-		SocialGroupId: inp.SocialGroupId,
+		BannerID:      bannerID,
+		SlotID:        inp.SlotID,
+		SocialGroupID: inp.SocialGroupID,
 		Datetime:      time.Now(),
 	}); err != nil {
 		return 0, err
 	}
 
-	return bannerId, nil
+	return bannerID, nil
 }
 
 func (bssg *BannerSlotSocialGroupService) rollADice(chance float64) bool {
-	return rand.Float64() <= chance
+	return rand.Float64() <= chance //nolint
 }

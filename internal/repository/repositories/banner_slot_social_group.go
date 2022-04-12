@@ -15,6 +15,11 @@ type BannerSlotSocialGroups struct {
 	table string
 }
 
+type bannerIDWithCtrResponse struct {
+	BannerID int64   `db:"banner_id"`
+	Ctr      float64 `db:"ctr"`
+}
+
 func NewBannerSlotSocialGroups(db *sqlx.DB) *BannerSlotSocialGroups {
 	return &BannerSlotSocialGroups{
 		db:    db,
@@ -22,8 +27,8 @@ func NewBannerSlotSocialGroups(db *sqlx.DB) *BannerSlotSocialGroups {
 	}
 }
 
-func (bssg *BannerSlotSocialGroups) IncrementClick(ctx context.Context, bannerSlotId, socialGroupId int64) error {
-	bannerSlotSocialGroup, err := bssg.firstOrCreate(ctx, bannerSlotId, socialGroupId)
+func (bssg *BannerSlotSocialGroups) IncrementClick(ctx context.Context, bannerSlotID, socialGroupID int64) error {
+	bannerSlotSocialGroup, err := bssg.firstOrCreate(ctx, bannerSlotID, socialGroupID)
 	if err != nil {
 		return err
 	}
@@ -38,8 +43,8 @@ func (bssg *BannerSlotSocialGroups) IncrementClick(ctx context.Context, bannerSl
 	return nil
 }
 
-func (bssg *BannerSlotSocialGroups) IncrementView(ctx context.Context, bannerSlotId, socialGroupId int64) error {
-	bannerSlotSocialGroup, err := bssg.firstOrCreate(ctx, bannerSlotId, socialGroupId)
+func (bssg *BannerSlotSocialGroups) IncrementView(ctx context.Context, bannerSlotID, socialGroupID int64) error {
+	bannerSlotSocialGroup, err := bssg.firstOrCreate(ctx, bannerSlotID, socialGroupID)
 	if err != nil {
 		return err
 	}
@@ -54,15 +59,12 @@ func (bssg *BannerSlotSocialGroups) IncrementView(ctx context.Context, bannerSlo
 	return nil
 }
 
-func (bssg *BannerSlotSocialGroups) GetTheMostProfitableBannerId(
+func (bssg *BannerSlotSocialGroups) GetTheMostProfitableBannerID(
 	ctx context.Context,
-	slotId,
-	socialGroupId int64,
+	slotID,
+	socialGroupID int64,
 ) (int64, error) {
-	var result = struct {
-		BannerId int64   `db:"banner_id"`
-		Ctr      float64 `db:"ctr"`
-	}{}
+	result := bannerIDWithCtrResponse{}
 	escapeDivideByZero := fmt.Sprintf(`
 		CASE %[1]s.views
 			WHEN 0 THEN 1
@@ -80,21 +82,27 @@ func (bssg *BannerSlotSocialGroups) GetTheMostProfitableBannerId(
 		escapeDivideByZero,
 	)
 
-	if err := bssg.db.GetContext(ctx, &result, query, slotId, socialGroupId); err != nil && !errors.Is(sql.ErrNoRows, err) {
+	if err := bssg.db.GetContext(
+		ctx,
+		&result,
+		query,
+		slotID,
+		socialGroupID,
+	); err != nil && !errors.Is(sql.ErrNoRows, err) {
 		return 0, err
 	}
 
-	return result.BannerId, nil
+	return result.BannerID, nil
 }
 
 func (bssg *BannerSlotSocialGroups) firstOrCreate(
 	ctx context.Context,
-	bannerSlotId,
-	socialGroupId int64,
+	bannerSlotID,
+	socialGroupID int64,
 ) (*core.BannerSlotSocialGroup, error) {
 	bannerSlotSocialGroup := core.BannerSlotSocialGroup{
-		BannerSlotId:  bannerSlotId,
-		SocialGroupId: socialGroupId,
+		BannerSlotID:  bannerSlotID,
+		SocialGroupID: socialGroupID,
 	}
 
 	query := fmt.Sprintf("SELECT id FROM %s WHERE banner_slot_id=$1 AND social_group_id=$2 LIMIT 1;", bssg.table)
@@ -102,8 +110,8 @@ func (bssg *BannerSlotSocialGroups) firstOrCreate(
 		ctx,
 		&bannerSlotSocialGroup.ID,
 		query,
-		bannerSlotId,
-		socialGroupId,
+		bannerSlotID,
+		socialGroupID,
 	); err != nil && !errors.Is(sql.ErrNoRows, err) {
 		return nil, err
 	} else if errors.Is(sql.ErrNoRows, err) {
@@ -112,8 +120,8 @@ func (bssg *BannerSlotSocialGroups) firstOrCreate(
 		if err := bssg.db.QueryRowxContext(
 			ctx,
 			query,
-			bannerSlotId,
-			socialGroupId,
+			bannerSlotID,
+			socialGroupID,
 		).Scan(&bannerSlotSocialGroup.ID); err != nil {
 			return nil, err
 		}

@@ -9,22 +9,22 @@ import (
 )
 
 func (h *Handler) initBannerSlotRoutes(r *router.Router) {
-	bannerSlot := r.Group("/banner/{bannerId:[0-9]+}")
+	bannerSlot := r.Group("/banner/{bannerID:[0-9]+}")
 	{
-		bannerSlot.POST("/slot/{slotId:[0-9]+}", h.associateBannerToSlot)
-		bannerSlot.DELETE("/slot/{slotId:[0-9]+}", h.dissociateBannerFromSlot)
+		bannerSlot.POST("/slot/{slotID:[0-9]+}", h.associateBannerToSlot)
+		bannerSlot.DELETE("/slot/{slotID:[0-9]+}", h.dissociateBannerFromSlot)
 	}
 }
 
 func (h *Handler) associateBannerToSlot(ctx *fasthttp.RequestCtx) {
-	bannerId, slotId, err := h.parseBannerAndSlotIdsFromRequest(ctx)
+	bannerID, slotID, err := h.parseBannerAndSlotIDsFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
 
 	bannerSlot := core.BannerSlot{}
-	bannerSlot.ID, err = h.services.BannerSlots.AssociateBannerToSlot(h.ctx, bannerId, slotId)
+	bannerSlot.ID, err = h.services.BannerSlots.AssociateBannerToSlot(h.ctx, bannerID, slotID)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
@@ -35,31 +35,30 @@ func (h *Handler) associateBannerToSlot(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) dissociateBannerFromSlot(ctx *fasthttp.RequestCtx) {
-	bannerId, slotId, err := h.parseBannerAndSlotIdsFromRequest(ctx)
+	bannerID, slotID, err := h.parseBannerAndSlotIDsFromRequest(ctx)
 	if err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
 
-	if err := h.services.BannerSlots.DissociateBannerFromSlot(h.ctx, bannerId, slotId); err != nil {
+	if err := h.services.BannerSlots.DissociateBannerFromSlot(h.ctx, bannerID, slotID); err != nil {
 		ctx.Error(err.Error(), 500)
 		return
 	}
 
 	ctx.SetStatusCode(http.StatusOK)
-
 }
 
-func (h *Handler) parseBannerAndSlotIdsFromRequest(ctx *fasthttp.RequestCtx) (int64, int64, error) {
-	bannerId, err := h.getInt64UserValueFromRequest(ctx, "bannerId")
+func (h *Handler) parseBannerAndSlotIDsFromRequest(ctx *fasthttp.RequestCtx) (int64, int64, error) {
+	bannerID, err := h.getInt64UserValueFromRequest(ctx, "bannerID")
 	if err != nil {
 		return 0, 0, err
 	}
 
-	slotId, err := h.getInt64UserValueFromRequest(ctx, "slotId")
+	slotID, err := h.getInt64UserValueFromRequest(ctx, "slotID")
 	if err != nil {
 		return 0, 0, err
 	}
 
-	return bannerId, slotId, nil
+	return bannerID, slotID, nil
 }

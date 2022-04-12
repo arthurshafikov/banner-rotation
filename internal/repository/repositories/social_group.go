@@ -23,11 +23,11 @@ func NewSocialGroups(db *sqlx.DB) *SocialGroups {
 }
 
 func (b *SocialGroups) AddSocialGroup(ctx context.Context, description string) (int64, error) {
-	var socialGroupId int64
+	var socialGroupID int64
 	query := fmt.Sprintf("INSERT INTO %s (description) VALUES ($1) RETURNING id;", b.table)
-	err := b.db.QueryRowxContext(ctx, query, description).Scan(&socialGroupId)
+	err := b.db.QueryRowxContext(ctx, query, description).Scan(&socialGroupID)
 
-	return socialGroupId, err
+	return socialGroupID, err
 }
 
 func (b *SocialGroups) DeleteSocialGroup(ctx context.Context, id int64) error {

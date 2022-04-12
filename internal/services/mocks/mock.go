@@ -170,62 +170,62 @@ func (m *MockBannerSlots) EXPECT() *MockBannerSlotsMockRecorder {
 }
 
 // AssociateBannerToSlot mocks base method.
-func (m *MockBannerSlots) AssociateBannerToSlot(ctx context.Context, bannerId, slotId int64) (int64, error) {
+func (m *MockBannerSlots) AssociateBannerToSlot(ctx context.Context, bannerID, slotID int64) (int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AssociateBannerToSlot", ctx, bannerId, slotId)
+	ret := m.ctrl.Call(m, "AssociateBannerToSlot", ctx, bannerID, slotID)
 	ret0, _ := ret[0].(int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // AssociateBannerToSlot indicates an expected call of AssociateBannerToSlot.
-func (mr *MockBannerSlotsMockRecorder) AssociateBannerToSlot(ctx, bannerId, slotId interface{}) *gomock.Call {
+func (mr *MockBannerSlotsMockRecorder) AssociateBannerToSlot(ctx, bannerID, slotID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssociateBannerToSlot", reflect.TypeOf((*MockBannerSlots)(nil).AssociateBannerToSlot), ctx, bannerId, slotId)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssociateBannerToSlot", reflect.TypeOf((*MockBannerSlots)(nil).AssociateBannerToSlot), ctx, bannerID, slotID)
 }
 
 // DissociateBannerFromSlot mocks base method.
-func (m *MockBannerSlots) DissociateBannerFromSlot(ctx context.Context, bannerId, slotId int64) error {
+func (m *MockBannerSlots) DissociateBannerFromSlot(ctx context.Context, bannerID, slotID int64) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DissociateBannerFromSlot", ctx, bannerId, slotId)
+	ret := m.ctrl.Call(m, "DissociateBannerFromSlot", ctx, bannerID, slotID)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DissociateBannerFromSlot indicates an expected call of DissociateBannerFromSlot.
-func (mr *MockBannerSlotsMockRecorder) DissociateBannerFromSlot(ctx, bannerId, slotId interface{}) *gomock.Call {
+func (mr *MockBannerSlotsMockRecorder) DissociateBannerFromSlot(ctx, bannerID, slotID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DissociateBannerFromSlot", reflect.TypeOf((*MockBannerSlots)(nil).DissociateBannerFromSlot), ctx, bannerId, slotId)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DissociateBannerFromSlot", reflect.TypeOf((*MockBannerSlots)(nil).DissociateBannerFromSlot), ctx, bannerID, slotID)
 }
 
-// GetByBannerAndSlotIds mocks base method.
-func (m *MockBannerSlots) GetByBannerAndSlotIds(ctx context.Context, bannerId, slotId int64) (*core.BannerSlot, error) {
+// GetByBannerAndSlotIDs mocks base method.
+func (m *MockBannerSlots) GetByBannerAndSlotIDs(ctx context.Context, bannerID, slotID int64) (*core.BannerSlot, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByBannerAndSlotIds", ctx, bannerId, slotId)
+	ret := m.ctrl.Call(m, "GetByBannerAndSlotIDs", ctx, bannerID, slotID)
 	ret0, _ := ret[0].(*core.BannerSlot)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetByBannerAndSlotIds indicates an expected call of GetByBannerAndSlotIds.
-func (mr *MockBannerSlotsMockRecorder) GetByBannerAndSlotIds(ctx, bannerId, slotId interface{}) *gomock.Call {
+// GetByBannerAndSlotIDs indicates an expected call of GetByBannerAndSlotIDs.
+func (mr *MockBannerSlotsMockRecorder) GetByBannerAndSlotIDs(ctx, bannerID, slotID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByBannerAndSlotIds", reflect.TypeOf((*MockBannerSlots)(nil).GetByBannerAndSlotIds), ctx, bannerId, slotId)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByBannerAndSlotIDs", reflect.TypeOf((*MockBannerSlots)(nil).GetByBannerAndSlotIDs), ctx, bannerID, slotID)
 }
 
-// GetRandomBannerIdExceptExcluded mocks base method.
-func (m *MockBannerSlots) GetRandomBannerIdExceptExcluded(ctx context.Context, slotId, excludedBannerId int64) (int64, error) {
+// GetRandomBannerIDExceptExcluded mocks base method.
+func (m *MockBannerSlots) GetRandomBannerIDExceptExcluded(ctx context.Context, slotID, excludedBannerID int64) (int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetRandomBannerIdExceptExcluded", ctx, slotId, excludedBannerId)
+	ret := m.ctrl.Call(m, "GetRandomBannerIDExceptExcluded", ctx, slotID, excludedBannerID)
 	ret0, _ := ret[0].(int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetRandomBannerIdExceptExcluded indicates an expected call of GetRandomBannerIdExceptExcluded.
-func (mr *MockBannerSlotsMockRecorder) GetRandomBannerIdExceptExcluded(ctx, slotId, excludedBannerId interface{}) *gomock.Call {
+// GetRandomBannerIDExceptExcluded indicates an expected call of GetRandomBannerIDExceptExcluded.
+func (mr *MockBannerSlotsMockRecorder) GetRandomBannerIDExceptExcluded(ctx, slotID, excludedBannerID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRandomBannerIdExceptExcluded", reflect.TypeOf((*MockBannerSlots)(nil).GetRandomBannerIdExceptExcluded), ctx, slotId, excludedBannerId)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRandomBannerIDExceptExcluded", reflect.TypeOf((*MockBannerSlots)(nil).GetRandomBannerIDExceptExcluded), ctx, slotID, excludedBannerID)
 }
 
 // MockSocialGroups is a mock of SocialGroups interface.
@@ -318,19 +318,19 @@ func (m *MockBannerSlotSocialGroups) EXPECT() *MockBannerSlotSocialGroupsMockRec
 	return m.recorder
 }
 
-// GetBannerIdToShow mocks base method.
-func (m *MockBannerSlotSocialGroups) GetBannerIdToShow(ctx context.Context, inp core.GetBannerRequest) (int64, error) {
+// GetBannerIDToShow mocks base method.
+func (m *MockBannerSlotSocialGroups) GetBannerIDToShow(ctx context.Context, inp core.GetBannerRequest) (int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBannerIdToShow", ctx, inp)
+	ret := m.ctrl.Call(m, "GetBannerIDToShow", ctx, inp)
 	ret0, _ := ret[0].(int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetBannerIdToShow indicates an expected call of GetBannerIdToShow.
-func (mr *MockBannerSlotSocialGroupsMockRecorder) GetBannerIdToShow(ctx, inp interface{}) *gomock.Call {
+// GetBannerIDToShow indicates an expected call of GetBannerIDToShow.
+func (mr *MockBannerSlotSocialGroupsMockRecorder) GetBannerIDToShow(ctx, inp interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBannerIdToShow", reflect.TypeOf((*MockBannerSlotSocialGroups)(nil).GetBannerIdToShow), ctx, inp)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBannerIDToShow", reflect.TypeOf((*MockBannerSlotSocialGroups)(nil).GetBannerIDToShow), ctx, inp)
 }
 
 // IncrementClick mocks base method.

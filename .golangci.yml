@@ -14,7 +14,6 @@ linters:
     - deadcode
     - depguard
     - dogsled
-    - dupl
     - durationcheck
     - errorlint
     - exhaustive
@@ -44,7 +43,6 @@ linters:
     - nestif
     - nilerr
     - noctx
-    - nolintlint
     - prealloc
     - predeclared
     - revive

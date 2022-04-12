@@ -21,10 +21,10 @@ type Slots interface {
 }
 
 type BannerSlots interface {
-	AddBannerSlot(ctx context.Context, bannerId, slotId int64) (int64, error)
-	DeleteBannerSlot(ctx context.Context, bannerId, slotId int64) error
-	GetByBannerAndSlotIds(ctx context.Context, bannerId, slotId int64) (*core.BannerSlot, error)
-	GetRandomBannerIdExceptExcluded(ctx context.Context, slotId, excludedBannerId int64) (int64, error)
+	AddBannerSlot(ctx context.Context, bannerID, slotID int64) (int64, error)
+	DeleteBannerSlot(ctx context.Context, bannerID, slotID int64) error
+	GetByBannerAndSlotIDs(ctx context.Context, bannerID, slotID int64) (*core.BannerSlot, error)
+	GetRandomBannerIDExceptExcluded(ctx context.Context, slotID, excludedBannerID int64) (int64, error)
 }
 
 type SocialGroups interface {
@@ -34,9 +34,9 @@ type SocialGroups interface {
 }
 
 type BannerSlotSocialGroups interface {
-	IncrementClick(ctx context.Context, bannerSlotId, socialGroupId int64) error
-	IncrementView(ctx context.Context, bannerSlotId, socialGroupId int64) error
-	GetTheMostProfitableBannerId(ctx context.Context, slotId, socialGroupId int64) (int64, error)
+	IncrementClick(ctx context.Context, bannerSlotID, socialGroupID int64) error
+	IncrementView(ctx context.Context, bannerSlotID, socialGroupID int64) error
+	GetTheMostProfitableBannerID(ctx context.Context, slotID, socialGroupID int64) (int64, error)
 }
 
 type Repository struct {

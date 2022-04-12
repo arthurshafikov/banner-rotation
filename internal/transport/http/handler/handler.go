@@ -55,7 +55,7 @@ func (h *Handler) setJSONResponse(ctx *fasthttp.RequestCtx, body interface{}) {
 	ctx.Response.Header.SetCanonical(strContentType, strApplicationJSON)
 }
 
-func (h *Handler) getIdFromRequest(ctx *fasthttp.RequestCtx) (int64, error) {
+func (h *Handler) getIDFromRequest(ctx *fasthttp.RequestCtx) (int64, error) {
 	return h.getInt64UserValueFromRequest(ctx, "id")
 }
 

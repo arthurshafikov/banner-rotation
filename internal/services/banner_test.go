@@ -28,10 +28,10 @@ func TestAddBanner(t *testing.T) {
 	)
 	b := NewBannerService(bannerRepo)
 
-	bannerId, err := b.AddBanner(ctx, "test_description")
+	bannerID, err := b.AddBanner(ctx, "test_description")
 
 	require.NoError(t, err)
-	require.Equal(t, expectedBanner.ID, bannerId)
+	require.Equal(t, expectedBanner.ID, bannerID)
 }
 
 func TestDeleteBanner(t *testing.T) {

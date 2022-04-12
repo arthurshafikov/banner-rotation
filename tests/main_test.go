@@ -21,9 +21,7 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-var (
-	r *require.Assertions
-)
+var r *require.Assertions
 
 type APITestSuite struct {
 	suite.Suite
@@ -48,7 +46,7 @@ func TestAPISuite(t *testing.T) {
 }
 
 func (s *APITestSuite) SetupSuite() {
-	r = s.Require() //nolint
+	r = s.Require()
 	s.ctx, s.ctxCancel = context.WithCancel(context.Background())
 
 	s.config = &config.Config{
@@ -65,7 +63,7 @@ func (s *APITestSuite) SetupSuite() {
 
 	queue := mocks.NewQueueMock()
 
-	s.db = postgres.NewSqlxDb(s.ctx, s.config.DSN)
+	s.db = postgres.NewSqlxDB(s.ctx, s.config.DSN)
 	s.repos = repository.NewRepository(s.db)
 	services := services.NewServices(services.Dependencies{
 		Repository:  s.repos,
@@ -99,8 +97,8 @@ func (s *APITestSuite) resetDatabase() error {
 	return err
 }
 
-func (s *APITestSuite) makeGetRequest(path string, urlValues url.Values) (*httppkg.Response, error) {
-	return s.makeRequest(httppkg.MethodGet, path, urlValues)
+func (s *APITestSuite) makeGetBannerRequest(urlValues url.Values) (*httppkg.Response, error) {
+	return s.makeRequest(httppkg.MethodGet, "getBanner", urlValues)
 }
 
 func (s *APITestSuite) makePostRequest(path string, urlValues url.Values) (*httppkg.Response, error) {
@@ -112,7 +110,8 @@ func (s *APITestSuite) makeDeleteRequest(path string, urlValues url.Values) (*ht
 }
 
 func (s *APITestSuite) makeRequest(method string, path string, urlValues url.Values) (*httppkg.Response, error) {
-	req, err := httppkg.NewRequest(
+	req, err := httppkg.NewRequestWithContext(
+		context.Background(),
 		method,
 		fmt.Sprintf("http://integration:%v/%s?%s", s.config.Port, path, urlValues.Encode()),
 		nil,

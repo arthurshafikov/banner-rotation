@@ -17,10 +17,10 @@ func TestAddSlot(t *testing.T) {
 		WithArgs("test_description").
 		WillReturnRows(sqlmock.NewRows([]string{"id"}).FromCSVString("2"))
 
-	slotId, err := slotRepo.AddSlot(ctx, "test_description")
+	slotID, err := slotRepo.AddSlot(ctx, "test_description")
 	require.NoError(t, err)
 	require.NoError(t, mock.ExpectationsWereMet())
-	require.Equal(t, int64(2), slotId)
+	require.Equal(t, int64(2), slotID)
 }
 
 func TestDeleteSlot(t *testing.T) {
