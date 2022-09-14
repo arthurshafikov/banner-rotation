@@ -5,18 +5,21 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/arthurshafikov/banner-rotation/internal/transport/http/handler"
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
 	"golang.org/x/sync/errgroup"
 )
 
+type Handler interface {
+	Init(r *router.Router)
+}
+
 type Server struct {
-	handler *handler.Handler
+	handler Handler
 	server  *fasthttp.Server
 }
 
-func NewServer(handler *handler.Handler) *Server {
+func NewServer(handler Handler) *Server {
 	return &Server{
 		handler: handler,
 	}

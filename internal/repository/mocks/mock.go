@@ -8,8 +8,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	gomock "github.com/golang/mock/gomock"
 	core "github.com/arthurshafikov/banner-rotation/internal/core"
+	gomock "github.com/golang/mock/gomock"
 )
 
 // MockBanners is a mock of Banners interface.
