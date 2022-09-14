@@ -2,26 +2,22 @@ package postgres
 
 import (
 	"context"
+	"log"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" //nolint
+	"golang.org/x/sync/errgroup"
 )
 
-func NewSqlxDB(ctx context.Context, dsn string) *sqlx.DB {
+func NewSqlxDB(ctx context.Context, g *errgroup.Group, dsn string) *sqlx.DB {
 	db, err := sqlx.Connect("postgres", dsn)
-	go func() {
-		<-ctx.Done()
-		if err := closeConnection(db); err != nil {
-			panic(err)
-		}
-	}()
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
+	g.Go(func() error {
+		<-ctx.Done()
+		return db.Close()
+	})
 
 	return db
-}
-
-func closeConnection(db *sqlx.DB) error {
-	return db.Close()
 }

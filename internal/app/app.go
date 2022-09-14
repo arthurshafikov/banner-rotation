@@ -32,7 +32,7 @@ func Run() {
 
 	config := config.NewConfig(envFileLocation)
 
-	db := postgres.NewSqlxDB(ctx, config.DSN)
+	db := postgres.NewSqlxDB(ctx, group, config.DSN)
 
 	repos := repository.NewRepository(db)
 

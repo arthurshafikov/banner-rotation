@@ -64,7 +64,8 @@ func (s *APITestSuite) SetupSuite() {
 
 	queue := mocks.NewQueueMock()
 
-	s.db = postgres.NewSqlxDB(s.ctx, s.config.DSN)
+	group := &errgroup.Group{}
+	s.db = postgres.NewSqlxDB(s.ctx, group, s.config.DSN)
 	s.repos = repository.NewRepository(s.db)
 	services := services.NewServices(services.Dependencies{
 		Repository:  s.repos,
@@ -74,7 +75,7 @@ func (s *APITestSuite) SetupSuite() {
 
 	s.handler = handler.NewHandler(s.ctx, services, http.NewRequestParser())
 	s.server = http.NewServer(s.handler)
-	s.server.Serve(s.ctx, &errgroup.Group{}, s.config.ServerConfig.Port)
+	s.server.Serve(s.ctx, group, s.config.ServerConfig.Port)
 }
 
 func (s *APITestSuite) TearDownTest() {
