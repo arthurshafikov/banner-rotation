@@ -1,8 +1,9 @@
 package http
 
 import (
-	"errors"
 	"strconv"
+
+	"github.com/arthurshafikov/banner-rotation/internal/core"
 )
 
 type RequestParser struct{}
@@ -14,7 +15,7 @@ func NewRequestParser() *RequestParser {
 func (rp *RequestParser) ParseInt64FromInterface(value interface{}) (int64, error) {
 	valueString, ok := value.(string)
 	if !ok {
-		return 0, errors.New("could not convert value to string")
+		return 0, core.ErrConvertToString
 	}
 
 	valueInt, err := strconv.Atoi(valueString)
