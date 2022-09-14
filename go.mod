@@ -28,4 +28,5 @@ require (
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/lib/pq v1.10.4
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
 )

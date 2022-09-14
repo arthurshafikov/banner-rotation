@@ -19,6 +19,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+	"golang.org/x/sync/errgroup"
 )
 
 var r *require.Assertions
@@ -72,8 +73,8 @@ func (s *APITestSuite) SetupSuite() {
 	})
 
 	s.handler = handler.NewHandler(s.ctx, services, http.NewRequestParser())
-	s.server = http.NewServer(s.ctx, s.handler)
-	go s.server.Serve(s.config.ServerConfig.Port)
+	s.server = http.NewServer(s.handler)
+	s.server.Serve(s.ctx, &errgroup.Group{}, s.config.ServerConfig.Port)
 }
 
 func (s *APITestSuite) TearDownTest() {

@@ -25,10 +25,10 @@ enterdb:
 	docker exec -it ${APP_NAME}_db_1 psql -U homestead;
 
 up:
-	docker-compose -f ${DOCKER_COMPOSE_FILE} -p ${APP_NAME} up --build
+	docker-compose --env-file ./.env -f ${DOCKER_COMPOSE_FILE} -p ${APP_NAME} up --build --attach app
 
 down:
-	docker-compose -f ${DOCKER_COMPOSE_FILE} down --volumes
+	docker-compose --env-file ./.env -f ${DOCKER_COMPOSE_FILE} down --volumes
 
 mocks:
 	mockgen -source=./internal/repository/repository.go -destination ./internal/repository/mocks/mock.go
@@ -36,7 +36,7 @@ mocks:
 	mockgen -source=./internal/transport/http/handler/handler.go -destination ./internal/transport/http/handler/mocks/mock.go
 
 integration-tests:
-	docker-compose --env-file ./.env.ci -f ${DOCKER_COMPOSE_TEST_FILE} -p ${APP_TEST_NAME} up --build --abort-on-container-exit --exit-code-from integration
+	docker-compose --env-file ./.env.ci -f ${DOCKER_COMPOSE_TEST_FILE} -p ${APP_TEST_NAME} up --attach integration --build --abort-on-container-exit --exit-code-from integration
 	docker-compose -f ${DOCKER_COMPOSE_TEST_FILE} -p ${APP_TEST_NAME} down --volumes
 
 reset-integration-tests:
