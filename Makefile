@@ -16,6 +16,9 @@ run: build
 test: 
 	go test --short -race ./internal/... ./pkg/...
 
+lint: 
+	golangci-lint run ./...
+
 .PHONY: build test
 
 enterdb:
