@@ -38,7 +38,7 @@ mocks:
 	mockgen -source=./pkg/queue/kafka.go -destination ./pkg/queue/mocks/mock.go
 
 integration-tests:
-	docker-compose --env-file ./.env.ci -f ${DOCKER_COMPOSE_TEST_FILE} -p ${APP_TEST_NAME} up --attach integration --build --abort-on-container-exit --exit-code-from integration
+	docker-compose --env-file ./.env.ci -f ${DOCKER_COMPOSE_TEST_FILE} -p ${APP_TEST_NAME} up  --build --abort-on-container-exit --exit-code-from integration --attach integration
 	docker-compose -f ${DOCKER_COMPOSE_TEST_FILE} -p ${APP_TEST_NAME} down --volumes
 
 reset-integration-tests:
