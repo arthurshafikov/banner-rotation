@@ -3,8 +3,7 @@ package queue
 import (
 	"context"
 	"encoding/json"
-	"log"
-	"os"
+	"fmt"
 
 	kafka "github.com/segmentio/kafka-go"
 )
@@ -15,40 +14,41 @@ type element struct {
 	Topic string
 }
 
+type KafkaWriter interface {
+	WriteMessages(ctx context.Context, msgs ...kafka.Message) error
+}
+
 type Queue struct {
 	ctx         context.Context
 	elements    chan element
-	KafkaWriter *kafka.Writer
+	KafkaWriter KafkaWriter
 }
 
-func NewQueue(ctx context.Context, brokerAddress string) *Queue {
-	l := log.New(os.Stdout, "kafka writer: ", 0)
-
-	w := kafka.NewWriter(kafka.WriterConfig{
-		Brokers: []string{brokerAddress},
-		Logger:  l,
-	})
-
+func NewQueue(ctx context.Context, kafkaWriter KafkaWriter) *Queue {
 	return &Queue{
 		ctx:         ctx,
 		elements:    make(chan element, 100),
-		KafkaWriter: w,
+		KafkaWriter: kafkaWriter,
 	}
 }
 
-func (q *Queue) Dispatch() {
+func (q *Queue) Dispatch() error {
 OUTER:
 	for {
+		fmt.Println("For...")
 		select {
 		case <-q.ctx.Done():
+			fmt.Println("Ctx done...")
 			break OUTER
 		case el := <-q.elements:
-			err := q.writeMessageToKafka(el)
-			if err != nil {
-				panic(err)
+			fmt.Println("new elem!")
+			if err := q.writeMessageToKafka(el); err != nil {
+				return err
 			}
 		}
 	}
+
+	return nil
 }
 
 func (q *Queue) AddToQueue(topic string, value interface{}) error {

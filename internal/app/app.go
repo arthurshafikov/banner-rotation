@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"log"
+	"os"
 	"os/signal"
 	"syscall"
 
@@ -14,6 +15,7 @@ import (
 	"github.com/arthurshafikov/banner-rotation/internal/transport/http/handler"
 	"github.com/arthurshafikov/banner-rotation/pkg/postgres"
 	"github.com/arthurshafikov/banner-rotation/pkg/queue"
+	"github.com/segmentio/kafka-go"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -36,11 +38,14 @@ func Run() {
 
 	repos := repository.NewRepository(db)
 
-	queue := queue.NewQueue(ctx, config.QueueConfig.BrokerAddress)
+	loggerKafka := log.New(os.Stdout, "kafka writer: ", 0)
+	kafkaWriter := kafka.NewWriter(kafka.WriterConfig{
+		Brokers: []string{config.QueueConfig.BrokerAddress},
+		Logger:  loggerKafka,
+	})
+	queue := queue.NewQueue(ctx, kafkaWriter)
 	group.Go(func() error {
-		queue.Dispatch()
-
-		return nil
+		return queue.Dispatch()
 	})
 
 	services := services.NewServices(services.Dependencies{

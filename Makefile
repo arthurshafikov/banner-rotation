@@ -35,6 +35,7 @@ mocks:
 	mockgen -source=./internal/services/services.go -destination ./internal/services/mocks/mock.go
 	mockgen -source=./internal/transport/http/handler/handler.go -destination ./internal/transport/http/handler/mocks/mock.go
 	mockgen -source=./internal/transport/http/server.go -destination ./internal/transport/http/mocks/mock.go
+	mockgen -source=./pkg/queue/kafka.go -destination ./pkg/queue/mocks/mock.go
 
 integration-tests:
 	docker-compose --env-file ./.env.ci -f ${DOCKER_COMPOSE_TEST_FILE} -p ${APP_TEST_NAME} up --attach integration --build --abort-on-container-exit --exit-code-from integration
