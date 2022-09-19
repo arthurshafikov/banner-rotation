@@ -1,6 +1,6 @@
 module github.com/arthurshafikov/banner-rotation
 
-go 1.17
+go 1.18
 
 require (
 	github.com/fasthttp/router v1.4.6

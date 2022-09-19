@@ -1,4 +1,4 @@
-FROM golang:1.17.3-alpine as build
+FROM golang:1.18-alpine as build
 
 RUN set -ex; \
     apk update; \
